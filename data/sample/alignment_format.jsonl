@@ -1,0 +1,1 @@
+{"en_sentence": "<English sentence>", "tgt_sentence": "<Marathi sentence>", "alignments": [{"src_idx": 0, "tgt_idx": 0, "score": 1.0}, {"src_idx": 2, "tgt_idx": 1, "score": 0.62}]}

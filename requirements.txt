@@ -1,0 +1,17 @@
+# Tested with Python 3.10. Pin to the exact versions from your cluster env
+# before release:  pip freeze | grep -E "torch|transformers|datasets|..."
+torch>=2.0
+transformers>=4.36
+datasets>=2.14
+scikit-learn>=1.2
+numpy>=1.24
+pandas>=2.0
+spacy>=3.6            # + python -m spacy download en_core_web_sm
+sentence-transformers>=2.2
+indic-nlp-library>=0.92
+indic-transliteration>=2.3
+jellyfish>=1.0
+requests
+beautifulsoup4
+nltk
+pytest

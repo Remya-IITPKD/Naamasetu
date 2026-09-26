@@ -1,0 +1,42 @@
+# Hyperparameters used for all reported results. Scripts take these as CLI
+# flags; this file documents the values in one place for reviewers.
+
+parallel_extraction:          # scripts/01_extract_parallel.py
+  sentence_encoder: paraphrase-multilingual-mpnet-base-v2
+  sim_threshold: 0.70
+  matching: greedy 1-1
+
+projection:                   # scripts/02_project_labels.py (Algorithm 1)
+  encoder: bert-base-multilingual-cased
+  layer: 8
+  alpha_sem: 0.6
+  beta_phonetic: 0.2
+  gamma_roman: 0.2
+  lambda_entity_bonus: 0.15
+  theta_phonetic_hard: 0.8
+  tau_floor: 0.40
+  itermax_iters: 2
+  phonetic_min_len: 4
+  source_ner: spacy en_core_web_sm   # PERSON->PER, GPE/LOC->LOC, ORG->ORG
+
+merge:                        # scripts/04_merge_silver_gold.py
+  silver_dev_fraction: 0.005
+  seed: 42
+
+fine_tuning:                  # scripts/05_train_ner.py
+  models: [bert-base-multilingual-cased, xlm-roberta-base]
+  learning_rate: 3.0e-5       # selected on Marathi dev from sweep below
+  lr_sweep: [1.0e-5, 1.0e-6, 3.0e-5, 3.0e-6, 5.0e-5, 5.0e-6]
+  batch_size: 16
+  max_epochs: 10
+  max_seq_length: 256
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  fp16: true
+  early_stopping: {type: relative_dev_loss, rel_tol: 0.005, patience: 3}
+  checkpoint_selection: best dev token-level entity F1
+  seeds: [42, 123, 456, 789, 2024]
+
+evaluation:
+  metric: span-level exact-match micro F1 over PER/LOC/ORG (CoNLL)
+  test_set: Naamapadam gold test (never used for selection)

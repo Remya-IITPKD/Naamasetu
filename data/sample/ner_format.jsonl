@@ -1,0 +1,2 @@
+{"id": "mr_0", "tokens": ["tok1", "tok2", "tok3", "tok4"], "ner_tags": ["B-PER", "I-PER", "O", "B-LOC"]}
+{"id": "mr_1", "tokens": ["tok1", "tok2"], "ner_tags": ["B-ORG", "O"]}

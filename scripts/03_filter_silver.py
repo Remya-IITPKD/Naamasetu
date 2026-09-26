@@ -21,8 +21,8 @@ import sys
 from collections import Counter
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-from naamsetu.data import read_jsonl, write_jsonl  # noqa: E402
-from naamsetu.labels import TAG2ID, decode_tags  # noqa: E402
+from naamasetu.data import read_jsonl, write_jsonl  # noqa: E402
+from naamasetu.labels import TAG2ID, decode_tags  # noqa: E402
 
 
 def main():

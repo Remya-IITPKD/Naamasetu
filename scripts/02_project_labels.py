@@ -49,7 +49,7 @@ from typing import List
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-from naamsetu.languages import ALL_LANGS, lang_info, script_checker  # noqa: E402
+from naamasetu.languages import ALL_LANGS, lang_info, script_checker  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)

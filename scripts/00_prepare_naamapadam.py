@@ -12,9 +12,9 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-from naamsetu.data import write_jsonl  # noqa: E402
-from naamsetu.languages import ALL_LANGS  # noqa: E402
-from naamsetu.labels import decode_tags  # noqa: E402
+from naamasetu.data import write_jsonl  # noqa: E402
+from naamasetu.languages import ALL_LANGS  # noqa: E402
+from naamasetu.labels import decode_tags  # noqa: E402
 
 SPLITS = {"train": "train", "validation": "dev", "test": "test"}
 

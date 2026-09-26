@@ -34,7 +34,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
-from naamsetu.languages import ALL_LANGS, lang_info  # noqa: E402
+from naamasetu.languages import ALL_LANGS, lang_info  # noqa: E402
 
 _CAP = re.compile(r"^[A-Z][a-z]+")
 

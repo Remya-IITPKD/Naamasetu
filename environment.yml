@@ -1,4 +1,4 @@
-name: naamsetu
+name: naamasetu
 channels: [conda-forge, pytorch, nvidia]
 dependencies:
   - python=3.10

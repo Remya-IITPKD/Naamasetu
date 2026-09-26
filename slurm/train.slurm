@@ -3,7 +3,7 @@
 #   sbatch --array=0-4 --export=ALL,TGT_LANG=mr,MODEL=xlmr,SETTING=augmented slurm/train.slurm
 #   MODEL   : mbert | xlmr
 #   SETTING : gold (Naamapadam only) | augmented (gold + silver)
-#SBATCH --job-name=naamsetu-train
+#SBATCH --job-name=naamasetu-train
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G

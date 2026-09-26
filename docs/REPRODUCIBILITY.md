@@ -27,7 +27,7 @@ TODO — say how these were chosen (grid search on which data? or set a priori?)
 ## Evaluation protocol
 
 * Metric: span-level exact-match micro P/R/F1 over PER/LOC/ORG
-  (`src/naamsetu/labels.py`, unit-tested in `tests/test_labels.py`).
+  (`src/naamasetu/labels.py`, unit-tested in `tests/test_labels.py`).
 * The test set is the Naamapadam gold test split. We never use it for LR or
   checkpoint selection.
 * We report mean ± std over 5 training seeds: 42, 123, 456, 789, 2024.

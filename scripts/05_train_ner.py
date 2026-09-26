@@ -33,8 +33,8 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-from naamsetu.data import load_ner_jsonl, make_dataset  # noqa: E402
-from naamsetu.labels import ENTITY_TYPES, ID2TAG, TAG2ID, TAG_LIST, span_prf  # noqa: E402
+from naamasetu.data import load_ner_jsonl, make_dataset  # noqa: E402
+from naamasetu.labels import ENTITY_TYPES, ID2TAG, TAG2ID, TAG_LIST, span_prf  # noqa: E402
 
 
 def parse_args():

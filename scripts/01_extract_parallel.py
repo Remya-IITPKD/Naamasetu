@@ -31,7 +31,7 @@ import urllib.parse
 from typing import List
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-from naamsetu.languages import ALL_LANGS, lang_info, script_checker  # noqa: E402
+from naamasetu.languages import ALL_LANGS, lang_info, script_checker  # noqa: E402
 
 STRIP_SELECTORS = [
     "table", "infobox", "nav", "aside", "figure", "ul", "ol", ".toc",
@@ -52,7 +52,7 @@ def parse_args():
     ap.add_argument("--embed-batch", type=int, default=64)
     ap.add_argument("--timeout", type=int, default=20)
     ap.add_argument("--min-sent-chars", type=int, default=10)
-    ap.add_argument("--user-agent", default="naamsetu-research-crawler/0.1")
+    ap.add_argument("--user-agent", default="naamasetu-research-crawler/0.1")
     return ap.parse_args()
 
 

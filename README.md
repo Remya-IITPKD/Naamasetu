@@ -1,6 +1,6 @@
-# Naamsetu: Cross-lingual Named Entity Transfer by Bridging Languages
+# Naamasetu: Cross-lingual Named Entity Transfer by Bridging Languages
 
-Code and data for the ARR submission *"Naamsetu: A Cross-lingual Named Entity Transfer by Bridging Languages"* (anonymous).
+Code and data for the ARR submission *"Naamasetu: A Cross-lingual Named Entity Transfer by Bridging Languages"* (anonymous).
 
 **What this repo does.** We mine English–Indic parallel sentences from comparable Wikipedia articles and tag the English side with an off-the-shelf NER model. We then project those labels onto nine Indic languages with a **hybrid word aligner**, which combines contextual semantic similarity, phonetic (Metaphone) similarity and romanised-spelling similarity, plus an entity bonus. Finally, we check whether adding this *silver* data to the *gold* Naamapadam training set improves PER/LOC/ORG NER with mBERT and XLM-R.
 
@@ -34,7 +34,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 
 ```
 .
-├── src/naamsetu/            shared library
+├── src/naamasetu/            shared library
 │   ├── languages.py         language registry (scripts, codes, Unicode blocks)
 │   ├── labels.py            BIO schema + span-level P/R/F1 (CoNLL exact match)
 │   └── data.py              JSONL I/O, sub-word label alignment
@@ -60,7 +60,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 ## Setup
 
 ```bash
-conda env create -f environment.yml && conda activate naamsetu
+conda env create -f environment.yml && conda activate naamasetu
 pip install -e .
 python -m spacy download en_core_web_sm
 pytest -q tests          # sanity check (no GPU needed)

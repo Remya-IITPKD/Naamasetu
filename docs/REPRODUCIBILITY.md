@@ -80,7 +80,8 @@ the training data:
 * training code and hyperparameters (their fine-tuning setup vs. our LR sweep
   and relative-loss early stopping);
 * the cited numbers are Table 5 of Mhaske et al. (2023) ("Mined data,
-  Awesome Align"; mBERT, uncased), reported on the same Naamapadam test sets;
+  Awesome Align"): **monolingual** mBERT (uncased), one model per language,
+  reported on the same Naamapadam test sets (not their multilingual results);
   per the authors of this work the F1 definition matches the one in
   `main_table_type.md`, but the Naamapadam paper does not state it explicitly;
 * no per-sentence predictions, so no significance test is possible.

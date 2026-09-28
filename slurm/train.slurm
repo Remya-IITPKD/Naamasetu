@@ -1,5 +1,8 @@
 #!/bin/bash
-# Stage 5 (fine-tuning) as a SLURM array over seeds.
+# Stage 5 (fine-tuning). Paper setting = one task (seed 42), 6-LR sweep
+# with the LR chosen on dev:
+#   sbatch --array=0 --export=ALL,TGT_LANG=mr,MODEL=xlmr,SETTING=augmented slurm/train.slurm
+# Extra seeds for a variance estimate:
 #   sbatch --array=0-4 --export=ALL,TGT_LANG=mr,MODEL=xlmr,SETTING=augmented slurm/train.slurm
 #   MODEL   : mbert | xlmr
 #   SETTING : gold (Naamapadam only) | augmented (gold + silver)
@@ -16,7 +19,7 @@ set -euo pipefail
 PYTHON=${PYTHON:-python}
 SEEDS=(42 123 456 789 2024)
 SEED=${SEEDS[${SLURM_ARRAY_TASK_ID:-0}]}
-LRS=${LRS:-3e-5}
+LRS=${LRS:-"1e-5 1e-6 3e-5 3e-6 5e-5 5e-6"}
 cd "${SLURM_SUBMIT_DIR:-.}"
 mkdir -p logs
 

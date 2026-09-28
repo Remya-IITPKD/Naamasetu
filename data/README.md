@@ -43,26 +43,27 @@ Tag set: `O, B-PER, I-PER, B-ORG, I-ORG, B-LOC, I-LOC`.
 
 ## Statistics
 
-<!-- TODO: fill from data/augmented/<lang>/stats_<lang>.json -->
+Sentence counts (lines in each JSONL file). Merged train = gold train + 99.5% of the
+filtered silver; merged dev = gold dev + the other 0.5%. The test set is the unchanged gold test.
 
-| Lang | Parallel pairs | Silver (after filter) | Gold train | Gold dev | Gold test |
-|---|---|---|---|---|---|
-| as | | | | | |
-| gu | | | | | |
-| kn | | | | | |
-| ml | | | | | |
-| mr | | | | | |
-| or | | | | | |
-| pa | | | | | |
-| ta | | | | | |
-| te | | | | | |
+| Lang | Parallel pairs | Silver (after filter) | Gold train | Gold dev | Gold test | Merged train | Merged dev |
+|---|---|---|---|---|---|---|---|
+| as | TODO | 632 | 10,266 | 52 | 51 | 10,895 | 55 |
+| gu | TODO | 43,972 | 472,845 | 2,389 | 1,076 | 516,597 | 2,609 |
+| kn | TODO | 48,911 | 471,763 | 2,381 | 1,019 | 520,429 | 2,626 |
+| ml | TODO | 131,224 | 716,652 | 3,618 | 974 | 847,220 | 4,274 |
+| mr | TODO | 44,415 | 455,248 | 2,300 | 1,080 | 499,441 | 2,522 |
+| or | TODO | 11,122 | 196,793 | 993 | 994 | 207,859 | 1,049 |
+| pa | TODO | 81,409 | 463,534 | 2,340 | 993 | 544,536 | 2,747 |
+| ta | TODO | 172,150 | 497,882 | 2,795 | 758 | 669,171 | 3,656 |
+| te | TODO | 233,892 | 507,741 | 2,700 | 847 | 740,464 | 3,869 |
 
 ## Sources and licences
 
 | Artifact | Source | Licence |
 |---|---|---|
 | Wikipedia text | {as,gu,kn,ml,mr,or,pa,ta,te,en}.wikipedia.org | CC BY-SA 4.0 |
-| Naamapadam | `ai4bharat/naamapadam` (HF Hub) | TODO: confirm from the dataset card |
+| Naamapadam | `ai4bharat/naamapadam` (HF Hub) | CC0 1.0 (per the dataset card) |
 | Released parallel + silver data | this work | CC BY-SA 4.0 (inherits from Wikipedia) |
 
 Silver labels are produced automatically and **contain noise**. Do not use them as evaluation data.

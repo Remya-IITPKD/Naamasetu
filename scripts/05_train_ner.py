@@ -6,13 +6,13 @@
 * Optional LR sweep; the best LR is selected on DEV F1 only.
 * The chosen model is evaluated once on TEST (span-level, CoNLL-style).
 
-Usage (paper setting, one seed):
+Usage (paper setting: 6-LR sweep, LR chosen on dev, seed 42):
     python scripts/05_train_ner.py --lang mr \
         --model-path xlm-roberta-base \
         --train data/augmented/mr/train_aug_mr.jsonl \
         --dev   data/augmented/mr/dev_aug_mr.jsonl \
         --test  data/augmented/mr/test_mr.jsonl \
-        --lrs 3e-5 --seed 42 \
+        --lrs 1e-5 1e-6 3e-5 3e-6 5e-5 5e-6 --seed 42 \
         --output-dir runs/xlmr/augmented/mr/seed42
 
 Outputs in --output-dir:
@@ -46,8 +46,9 @@ def parse_args():
     ap.add_argument("--train", required=True)
     ap.add_argument("--dev", required=True)
     ap.add_argument("--test", required=True)
-    ap.add_argument("--lrs", nargs="+", type=float, default=[3e-5],
-                    help="paper sweep: 1e-5 1e-6 3e-5 3e-6 5e-5 5e-6 (3e-5 selected)")
+    ap.add_argument("--lrs", nargs="+", type=float,
+                    default=[1e-5, 1e-6, 3e-5, 3e-6, 5e-5, 5e-6],
+                    help="LR sweep; the best LR is picked per language on dev F1 (paper setting)")
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--epochs", type=int, default=10)
     ap.add_argument("--seed", type=int, default=42)

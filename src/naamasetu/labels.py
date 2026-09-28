@@ -57,6 +57,24 @@ def _prf(tp, fp, fn):
     return p, r, f
 
 
+def token_prf(y_true_seqs, y_pred_seqs):
+    """Token-level micro P/R/F1 over the non-O tags (first sub-token per word).
+
+    Equivalent to sklearn `precision_recall_fscore_support(average="micro",
+    labels=<all tags except O>)` on the flattened sequences. More lenient than
+    span F1: a partly correct entity still earns credit for its correct tokens.
+    """
+    tp = fp = fn = 0
+    for t_seq, p_seq in zip(y_true_seqs, y_pred_seqs):
+        for t, p in zip(t_seq, p_seq):
+            if p == t:
+                tp += t != "O"
+            else:
+                fp += p != "O"
+                fn += t != "O"
+    return _prf(tp, fp, fn)
+
+
 def span_prf(y_true_seqs, y_pred_seqs, entity_types=ENTITY_TYPES):
     """Span-level micro P/R/F1 plus per-type scores.
 

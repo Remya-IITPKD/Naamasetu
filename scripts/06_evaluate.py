@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Stage 6 — Evaluate a saved model on any NER JSONL file (inference only).
 
-Reports span-level (CoNLL exact-match) P/R/F1 overall and per type.
+Reports span-level (CoNLL exact-match) P/R/F1 overall and per type, plus
+token-level micro P/R/F1 over the non-O tags (the more lenient metric).
 No model selection happens here; select checkpoints on dev during training.
 
 Usage:
@@ -20,13 +21,16 @@ import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from naamasetu.data import load_ner_jsonl, make_dataset  # noqa: E402
-from naamasetu.labels import ENTITY_TYPES, ID2TAG, span_prf  # noqa: E402
+from naamasetu.labels import ENTITY_TYPES, ID2TAG, span_prf, token_prf  # noqa: E402
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--model", required=True)
+    ap.add_argument("--tokenizer", default=None,
+                    help="load the tokenizer from here instead of --model (e.g. the base "
+                         "model, if the saved tokenizer.json needs a newer `tokenizers`)")
     ap.add_argument("--data", required=True)
     ap.add_argument("--out", required=True, help="JSON file for metrics")
     ap.add_argument("--batch-size", type=int, default=64)
@@ -37,7 +41,7 @@ def main():
     import torch
     from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification
 
-    tok = AutoTokenizer.from_pretrained(args.model)
+    tok = AutoTokenizer.from_pretrained(args.tokenizer or args.model)
     model = AutoModelForTokenClassification.from_pretrained(args.model).eval()
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model.to(device)
@@ -59,8 +63,10 @@ def main():
                 y_pred.append([ID2TAG[int(x)] for x in pr[m]])
 
     (p, r, f), per_type, report = span_prf(y_true, y_pred)
+    tp_, tr_, tf_ = token_prf(y_true, y_pred)
     out = {"model": args.model, "data": args.data, "n_sentences": len(y_true),
            "span_p": p, "span_r": r, "span_f1": f,
+           "token_p": tp_, "token_r": tr_, "token_f1": tf_,
            **{f"{e}_{k}": per_type[e][i] for e in ENTITY_TYPES
               for i, k in enumerate(["p", "r", "f1", "support"])}}
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
@@ -71,7 +77,7 @@ def main():
                 fh.write(json.dumps({"tokens": t[:len(g)], "gold": g, "pred": pr},
                                     ensure_ascii=False) + "\n")
     print(report)
-    print(f"\nspan F1 = {f:.4f}  -> {args.out}")
+    print(f"\nspan F1 = {f:.4f}  token F1 = {tf_:.4f}  -> {args.out}")
 
 
 if __name__ == "__main__":

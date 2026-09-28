@@ -1,0 +1,28 @@
+model	setting	lang	batch_size	lr	dev_f1	dev_set
+xlmr	gold	as	32	1e-05	0.4918	gold dev
+xlmr	gold	gu	16	3e-05	0.8451	gold dev
+xlmr	gold	kn	8	3e-05	0.8263	gold dev
+xlmr	gold	ml	16	5e-05	0.8543	gold dev
+xlmr	gold	mr	16	5e-05	0.8455	gold dev
+xlmr	gold	or	32	5e-05	0.4831	gold dev
+xlmr	gold	pa	8	3e-05	0.7942	gold dev
+xlmr	gold	ta	16	3e-05	0.8097	gold dev
+xlmr	gold	te	16	1e-05	0.8431	gold dev
+xlmr	augmented	as	16	1e-05	0.4734	gold dev + 0.5% silver
+xlmr	augmented	gu	16	5e-05	0.8049	gold dev + 0.5% silver
+xlmr	augmented	kn	16	5e-05	0.7951	gold dev + 0.5% silver
+xlmr	augmented	ml	16	3e-05	0.7914	gold dev + 0.5% silver
+xlmr	augmented	mr	16	5e-05	0.8071	gold dev + 0.5% silver
+xlmr	augmented	or	16	5e-05	0.4356	gold dev + 0.5% silver
+xlmr	augmented	pa	16	3e-05	0.7556	gold dev + 0.5% silver
+xlmr	augmented	ta	16	1e-05	0.7247	gold dev + 0.5% silver
+xlmr	augmented	te	16	3e-05	0.7535	gold dev + 0.5% silver
+mbert	augmented	as	16	5e-06	0.4368	gold dev + 0.5% silver
+mbert	augmented	gu	16	5e-05	0.8022	gold dev + 0.5% silver
+mbert	augmented	kn	16	1e-05	0.7900	gold dev + 0.5% silver
+mbert	augmented	ml	16	3e-05	0.7891	gold dev + 0.5% silver
+mbert	augmented	mr	16	1e-05	0.8025	gold dev + 0.5% silver
+mbert	augmented	or	16	1e-05	0.2090	gold dev + 0.5% silver
+mbert	augmented	pa	16	5e-06	0.7537	gold dev + 0.5% silver
+mbert	augmented	ta	16	5e-06	0.7170	gold dev + 0.5% silver
+mbert	augmented	te	16	3e-05	0.7472	gold dev + 0.5% silver

@@ -5,7 +5,7 @@ Expects the layout produced by slurm/train.slurm:
     runs/<model>/<setting>/<lang>/seed<S>/results.json
 where <setting> is e.g. `gold` (baseline) or `augmented` (gold + silver).
 
-Writes mean ± std (over seeds) of test span F1 per model/setting/language,
+Writes mean ± std (over seeds; just the score when there is one seed) of test span F1 per model/setting/language,
 plus the per-language delta (augmented - gold), as CSV, Markdown and LaTeX.
 
 Usage:
@@ -52,13 +52,14 @@ def main():
                     rows.append({"model": m, "setting": s, "lang": l, "n_seeds": len(v),
                                  "mean": mean(v), "std": pstdev(v) if len(v) > 1 else 0.0})
 
-    with open(os.path.join(args.out_dir, "summary.csv"), "w") as f:
+    with open(os.path.join(args.out_dir, "summary.csv"), "w", encoding="utf-8") as f:
         f.write("model,setting,lang,n_seeds,mean,std\n")
         for r in rows:
             f.write(f"{r['model']},{r['setting']},{r['lang']},{r['n_seeds']},{r['mean']:.2f},{r['std']:.2f}\n")
 
     idx = {(r["model"], r["setting"], r["lang"]): r for r in rows}
-    cell = lambda r: f"{r['mean']:.2f} ± {r['std']:.2f}" if r else "–"
+    cell = lambda r: ("–" if not r else f"{r['mean']:.2f}" if r["n_seeds"] == 1
+                      else f"{r['mean']:.2f} ± {r['std']:.2f}")
     md = ["| Model | Setting | " + " | ".join(langs) + " | Avg |",
           "|---|---|" + "---|" * (len(langs) + 1)]
     tex = [r"\begin{tabular}{ll" + "c" * (len(langs) + 1) + "}", r"\toprule",
@@ -66,19 +67,23 @@ def main():
     for m in models:
         for s in settings:
             rs = [idx.get((m, s, l)) for l in langs]
-            avg = mean(r["mean"] for r in rs if r) if any(rs) else float("nan")
+            if not any(rs):
+                continue
+            avg = mean(r["mean"] for r in rs if r)
             md.append(f"| {m} | {s} | " + " | ".join(cell(r) for r in rs) + f" | {avg:.2f} |")
             tex.append(f"{m} & {s} & " + " & ".join(
-                (f"{r['mean']:.1f}$_{{\\pm{r['std']:.1f}}}$" if r else "--") for r in rs)
+                ("--" if not r else f"{r['mean']:.1f}" if r["n_seeds"] == 1
+                 else f"{r['mean']:.1f}$_{{\\pm{r['std']:.1f}}}$") for r in rs)
                 + f" & {avg:.1f} \\\\")
         if "gold" in settings and "augmented" in settings:
             d = [(idx[(m, "augmented", l)]["mean"] - idx[(m, "gold", l)]["mean"])
                  if (m, "augmented", l) in idx and (m, "gold", l) in idx else None for l in langs]
-            md.append(f"| {m} | Δ | " + " | ".join(f"{x:+.2f}" if x is not None else "–" for x in d) + " | |")
+            if any(x is not None for x in d):
+                md.append(f"| {m} | Δ | " + " | ".join(f"{x:+.2f}" if x is not None else "–" for x in d) + " | |")
     tex += [r"\bottomrule", r"\end{tabular}"]
 
-    open(os.path.join(args.out_dir, "main_table.md"), "w").write("\n".join(md) + "\n")
-    open(os.path.join(args.out_dir, "main_table.tex"), "w").write("\n".join(tex) + "\n")
+    open(os.path.join(args.out_dir, "main_table.md"), "w", encoding="utf-8").write("\n".join(md) + "\n")
+    open(os.path.join(args.out_dir, "main_table.tex"), "w", encoding="utf-8").write("\n".join(tex) + "\n")
     print("\n".join(md))
 
 

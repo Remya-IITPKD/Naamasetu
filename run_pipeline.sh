@@ -6,7 +6,7 @@
 set -euo pipefail
 TGT_LANG=${1:?usage: bash run_pipeline.sh <lang>}
 PY=${PYTHON:-python}
-SEEDS=${SEEDS:-"42 123 456 789 2024"}
+SEEDS=${SEEDS:-"42"}          # paper: seed 42; e.g. SEEDS="42 123 456" for variance
 
 if [ "${CRAWL:-0}" = "1" ]; then
   $PY scripts/01_extract_parallel.py --lang "$TGT_LANG" \
@@ -36,7 +36,7 @@ for MODEL in mbert xlmr; do
       fi
       $PY scripts/05_train_ner.py --lang "$TGT_LANG" --model-path "$MP" \
           --train "$TR" --dev "$DV" --test "data/naamapadam/$TGT_LANG/test.jsonl" \
-          --lrs 3e-5 --seed "$SEED" --output-dir "runs/$MODEL/$SETTING/$TGT_LANG/seed$SEED"
+          --lrs 1e-5 1e-6 3e-5 3e-6 5e-5 5e-6 --seed "$SEED" --output-dir "runs/$MODEL/$SETTING/$TGT_LANG/seed$SEED"
     done
   done
 done

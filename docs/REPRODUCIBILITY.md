@@ -13,6 +13,14 @@ must be filled before submission.
 | Sentence encoder (Stage 1) | `paraphrase-multilingual-mpnet-base-v2` | ~278M |
 | English NER (Stage 2) | spaCy `en_core_web_sm` (TODO: version) | – |
 
+## Parallel-sentence threshold
+
+Stage 1 keeps English–Indic sentence pairs with cosine similarity ≥ 0.70
+(`configs/hyperparameters.yaml`). This is slightly lower than the 0.75 used
+for translation-based parallel data, because our pairs come from comparable,
+independently written Wikipedia articles: they share entities but rarely share
+exact wording, and a stricter threshold would discard many useful pairs.
+
 ## Hyperparameters
 
 All values are in `configs/hyperparameters.yaml`.
@@ -26,7 +34,11 @@ All values are in `configs/hyperparameters.yaml`.
   LRs, chosen on the Naamapadam gold dev F1. Early stopping: dev F1 did not
   improve for 3 epochs, max 10 epochs.
 * Both: weight decay 0.01, warmup ratio 0.1, fp16, max sequence length 256,
-  seed 42, best epoch restored by dev F1.
+  seed 42. Early stopping only decides when training ends; the checkpoint
+  with the highest dev F1 is restored and evaluated. (The `best_epoch` in the
+  training logs is the lowest-dev-loss epoch, which can differ.)
+* One seed only: the LR sweeps already take ≈ 575 GPU-hours, so the
+  augmented-vs-gold difference is tested with a paired bootstrap instead.
 * The LR / batch size selected for every run is listed in
   `results/selected_runs.tsv`.
 * mBERT was trained on the augmented data only. The mBERT gold-only numbers
@@ -67,12 +79,10 @@ the training data:
 
 * training code and hyperparameters (their fine-tuning setup vs. our LR sweep
   and relative-loss early stopping);
-* possibly the metric: compare against the metric their table reports
-  (TODO: confirm span-level vs token-level from the Naamapadam paper) and use
-  the matching column from `results/` (`main_table.md` = span,
-  `main_table_token.md` = token);
-* possibly the test-set version (the HF release we evaluate on vs. the split
-  used in their paper; TODO: confirm the test sizes match their data table);
+* the cited numbers are Table 5 of Mhaske et al. (2023) ("Mined data,
+  Awesome Align"; mBERT, uncased), reported on the same Naamapadam test sets;
+  per the authors of this work the F1 definition matches the one in
+  `main_table_type.md`, but the Naamapadam paper does not state it explicitly;
 * no per-sentence predictions, so no significance test is possible.
 
 Differences between the two rows are therefore indicative only.

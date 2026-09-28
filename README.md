@@ -142,7 +142,7 @@ their scores are uncertain.
 
 ## Data
 
-See [`data/README.md`](data/README.md) for file formats, sizes and download links for the parallel corpora, the projected silver data and the merged splits.
+The Naamasetu silver data and the merged training sets for all nine languages are included in this repository, gzipped, under `data/projected/` and `data/augmented/`. See [`data/README.md`](data/README.md) for the layout, formats and statistics.
 
 ## Licence
 

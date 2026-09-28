@@ -1,10 +1,23 @@
 # Data
 
-Large files are **not** stored in git. Download them from the anonymous link below and unpack them into `data/`.
+## Released in this repository
 
-> **Download:** TODO — anonymous link (e.g. an anonymous Zenodo / OSF / HF dataset) — added for review
+The silver data and the merged training sets used for all reported results are
+included here, gzipped (each file < 100 MB):
 
-Expected layout after download:
+| Path | Contents |
+|---|---|
+| `data/projected/<lang>/silver_filtered_<lang>.jsonl.gz` | Naamasetu silver NER data after filtering (the "Silver (after filter)" column below) |
+| `data/augmented/<lang>/train_aug_<lang>.jsonl.gz` | merged training set: Naamapadam gold train + 99.5% of the silver data |
+
+Unpack with `gunzip -k data/*/*/*.jsonl.gz` (or read them directly with Python's
+`gzip.open`). The merged dev set is the Naamapadam gold dev split plus the 0.5% of
+silver sentences that are not in `train_aug_<lang>`; the gold splits come from
+`scripts/00_prepare_naamapadam.py`. The parallel sentence pairs, alignment
+outputs and Wikipedia title lists (Stage 1–2 intermediates) are not included in
+this release.
+
+Full layout when all stages are run:
 
 ```
 data/

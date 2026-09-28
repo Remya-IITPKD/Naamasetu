@@ -31,7 +31,10 @@ esac
 
 if [ "$SETTING" = "augmented" ]; then
   TRAIN=data/augmented/$TGT_LANG/train_aug_$TGT_LANG.jsonl
+  [ -f "$TRAIN" ] || gunzip -k "$TRAIN.gz"          # released as .jsonl.gz
   DEV=data/augmented/$TGT_LANG/dev_aug_$TGT_LANG.jsonl
+  # the merged dev set is not released; fall back to the gold dev split
+  [ -f "$DEV" ] || DEV=data/naamapadam/$TGT_LANG/dev.jsonl
 else
   TRAIN=data/naamapadam/$TGT_LANG/train.jsonl
   DEV=data/naamapadam/$TGT_LANG/dev.jsonl

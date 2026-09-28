@@ -1,10 +1,21 @@
-# Naamasetu: Cross-lingual Named Entity Transfer by Bridging Languages
+# Naamasetu: Named Entity Recognition in Low-Resource Indic Languages
 
-Code and data for the ARR submission *"Naamasetu: A Cross-lingual Named Entity Transfer by Bridging Languages"* (anonymous).
+Code and data for the ARR submission *"Naamasetu: Named Entity Recognition in Low-Resource Indic Languages"* (anonymous).
 
 **What this repo does.** We mine English–Indic parallel sentences from comparable Wikipedia articles and tag the English side with an off-the-shelf NER model. We then project those labels onto nine Indic languages with a **hybrid word aligner**, which combines contextual semantic similarity, phonetic (Metaphone) similarity and romanised-spelling similarity, plus an entity bonus. Finally, we fine-tune mBERT and XLM-R on the *gold* Naamapadam training set augmented with this *silver* data for PER/LOC/ORG NER, and compare with the published Naamapadam baseline.
 
 Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (mr), Odia (or), Punjabi (pa), Tamil (ta), Telugu (te).
+
+## At a glance
+
+| You want… | Look at |
+|---|---|
+| The paper's results tables | [`results/paper_tables.md`](results/paper_tables.md) (also below, under Results) |
+| Every score for every model | [`results/test_scores.csv`](results/test_scores.csv) |
+| Hyperparameters of each reported model | [`results/selected_runs.tsv`](results/selected_runs.tsv), [`configs/hyperparameters.yaml`](configs/hyperparameters.yaml) |
+| The silver data and merged training sets | `data/projected/`, `data/augmented/` (see [`data/README.md`](data/README.md)) |
+| Compute, software versions, evaluation details | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) |
+| To retrain a model on the released data | [Quick start](#quick-start) below |
 
 ---
 
@@ -55,7 +66,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 ├── configs/hyperparameters.yaml   every value used for reported numbers
 ├── slurm/                   batch templates (projection, training)
 ├── run_pipeline.sh          end-to-end for one language
-├── data/                    see data/README.md (formats + download links)
+├── data/                    released silver + merged data (see data/README.md)
 ├── results/                 aggregated tables (generated)
 ├── docs/REPRODUCIBILITY.md  compute, runtimes, variance, artifact licences
 └── tests/                   unit tests for metrics and projection
@@ -72,22 +83,35 @@ pytest -q tests          # sanity check (no GPU needed)
 
 ## Quick start
 
+Retrain and evaluate an augmented model from the released data (Marathi, XLM-R):
+
 ```bash
-# 0) gold data
+# gold Naamapadam splits -> data/naamapadam/mr/{train,dev,test}.jsonl
 python scripts/00_prepare_naamapadam.py --langs mr
 
-# 1–7) full pipeline for Marathi (uses the released parallel corpus)
-bash run_pipeline.sh mr
+# released merged training set (gold train + silver)
+gunzip -k data/augmented/mr/train_aug_mr.jsonl.gz
+
+python scripts/05_train_ner.py --lang mr --model-path xlm-roberta-base \
+    --train data/augmented/mr/train_aug_mr.jsonl \
+    --dev   data/naamapadam/mr/dev.jsonl \
+    --test  data/naamapadam/mr/test.jsonl \
+    --seed 42 --output-dir runs/xlmr/augmented/mr/seed42
 ```
 
-On a SLURM cluster:
+The same on a SLURM cluster (use `MODEL=mbert` for mBERT):
 
 ```bash
-sbatch --export=ALL,TGT_LANG=mr slurm/project.slurm
 sbatch --array=0 --export=ALL,TGT_LANG=mr,MODEL=xlmr,SETTING=augmented slurm/train.slurm
-sbatch --array=0 --export=ALL,TGT_LANG=mr,MODEL=mbert,SETTING=augmented slurm/train.slurm
-python scripts/07_aggregate_results.py
 ```
+
+The reported models were selected on the gold dev split plus 0.5% held-out
+silver data; that merged dev file is not released, so the commands above use
+the gold dev split, and the selected learning rate can occasionally differ.
+
+The full pipeline from Wikipedia (`run_pipeline.sh`, `slurm/project.slurm`)
+also needs the parallel sentence pairs (Stages 1–2), which are not included in
+this release.
 
 ## Reproducing the main table
 
@@ -105,7 +129,7 @@ NER F1 × 100 on the Naamapadam gold test sets. Augmented = Naamapadam training 
 Naamasetu silver data; one model per cell (seed 42, learning rate chosen on dev, see
 `results/selected_runs.tsv`). All metrics and per-type scores: `results/test_scores.csv`.
 
-**Table 6** (paper layout; word-level micro-F1, B-/I- merged, `O` excluded)
+**Main results** (paper layout; word-level micro-F1, B-/I- merged, `O` excluded)
 
 | Language | Naamapadam mBERT (cited) | Augmented mBERT | Augmented XLM-R |
 |---|---|---|---|

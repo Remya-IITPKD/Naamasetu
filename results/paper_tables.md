@@ -5,7 +5,7 @@ Metric: word-level micro-F1 over PER/ORG/LOC with B-/I- merged, `O` excluded
 Augmented = Naamapadam + Naamasetu silver data. Every model: seed 42, learning rate chosen
 on dev (`selected_runs.tsv`), tested once. Higher augmented F1 per language in bold.
 
-## Table 6: NER F1 (%)
+## Main results: NER F1 (%)
 
 | Language | Naamapadam mBERT (cited) | Augmented mBERT | Augmented XLM-R |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Naamapadam mBERT: reported by Mhaske et al. (2023), Table 5 (monolingual mBERT),
 
 Differences of at most 0.07 from the training logs come from fp32 evaluation here vs. fp16 in the logs.
 
-## Table 7: per-entity F1 (%) of the augmented models
+## Per-entity F1 (%) of the augmented models
 
 | Language | mBERT PER | mBERT LOC | mBERT ORG | XLM-R PER | XLM-R LOC | XLM-R ORG |
 |---|---|---|---|---|---|---|

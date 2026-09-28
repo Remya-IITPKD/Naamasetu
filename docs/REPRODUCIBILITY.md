@@ -49,7 +49,7 @@ values are used for every language.
   (`src/naamasetu/labels.py`, unit-tested in `tests/test_labels.py`):
   * **type-level** micro P/R/F1: word by word after merging B-/I- into
     PER/LOC/ORG, `O` excluded (`labels.type_token_prf`). This is the metric of
-    the paper's Tables 6 and 7 and the `entity_micro_F1` the training scripts
+    the paper's results tables and the `entity_micro_F1` the training scripts
     print. It is word-level, not entity-level, and the most lenient of the three;
   * **span-level** exact-match micro P/R/F1 (`labels.span_prf`);
   * **token-level** micro P/R/F1 over the non-O BIO tags (`labels.token_prf`).

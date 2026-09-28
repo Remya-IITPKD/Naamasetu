@@ -5,7 +5,7 @@ All files here are generated from the dev-selected models (see
 
 | File | Contents | Produced by |
 |---|---|---|
-| `paper_tables.md` | the paper's Tables 6 and 7 in the paper's layout and metric | built from `test_scores.csv` |
+| `paper_tables.md` | the paper's main-results and per-entity tables, in the paper's layout and metric | built from `test_scores.csv` |
 | `selected_runs.tsv` | batch size, LR and dev F1 of the model chosen for each model and language | training logs (selection on dev) |
 | `main_table.{md,tex}`, `summary.csv` | span-level test F1 × 100 | `07_aggregate_results.py` |
 | `main_table_token.{md,tex}`, `summary_token.csv` | the same for token-level (BIO) F1 | `07_aggregate_results.py --metric test_token_f1` |

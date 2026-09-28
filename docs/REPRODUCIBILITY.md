@@ -1,8 +1,7 @@
 # Reproducibility notes
 
 This file collects what the ARR Responsible NLP Checklist asks about
-(sections B–C) so reviewers can find it in one place. Items marked TODO
-must be filled before submission.
+(sections B–C) so reviewers can find it in one place.
 
 ## Models
 
@@ -11,7 +10,7 @@ must be filled before submission.
 | mBERT | `bert-base-multilingual-cased` | ~178M |
 | XLM-R base | `xlm-roberta-base` | ~278M |
 | Sentence encoder (Stage 1) | `paraphrase-multilingual-mpnet-base-v2` | ~278M |
-| English NER (Stage 2) | spaCy `en_core_web_sm` (TODO: version) | – |
+| English NER (Stage 2) | spaCy 3.x `en_core_web_sm` (exact version not recorded) | – |
 
 ## Parallel-sentence threshold
 
@@ -47,8 +46,10 @@ All values are in `configs/hyperparameters.yaml`.
   code, data version, selection and metric) and is the one tested for
   significance.
 
-Projection weights (α=0.6, β=0.2, γ=0.2, λ=0.15, θ=0.8, τ=0.40, K=2):
-TODO — say how these were chosen (grid search on which data? or set a priori?).
+Projection weights (α=0.6, β=0.2, γ=0.2, λ=0.15, θ=0.8, τ=0.40, K=2) were
+chosen empirically: several settings were tried on sample sentence pairs and
+the one that aligned entity mentions most accurately was kept. The same
+values are used for every language.
 
 ## Evaluation protocol
 
@@ -92,8 +93,8 @@ Differences between the two rows are therefore indicative only.
 
 | Stage | Hardware | Wall time per language | Total GPU hours |
 |---|---|---|---|
-| 01 parallel extraction | TODO (Colab) | TODO | TODO |
-| 02 projection | 1× NVIDIA H100 or 4–8 CPU cores | minutes (as) to ~8 h (gu), from job logs | TODO |
+| 01 parallel extraction | Google Colab | not recorded | not recorded |
+| 02 projection | 1× NVIDIA H100 or 4–8 CPU cores | minutes (as) to ~8 h (gu), from job logs | not recorded |
 | 05 fine-tuning, one run (1 LR) | 1× NVIDIA H100 80GB | 3 min (as) – 4.4 h (ml) | – |
 | 05 fine-tuning, all reported runs | 1× H100 per run | – | ≈ 575 |
 
@@ -119,5 +120,6 @@ loads those models under the versions above.
 
 * spaCy English NER errors propagate into the silver labels.
 * Wikipedia content changes over time. We release our crawled snapshot
-  (crawl dates: TODO) so that Stage 1 does not have to be re-run.
+  (Wikipedia `latest` dumps downloaded between March and June 2026) so that
+  Stage 1 does not have to be re-run.
 * GPU non-determinism in fp16 training. Seed std is reported in the table.

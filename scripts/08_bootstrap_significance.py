@@ -3,7 +3,8 @@
 
 Reads the prediction files written by `06_evaluate.py --save-predictions`
 for two models on the same test set and reports, per language, the F1 gain
-(span-level by default, `--metric token` for token-level) with a 95%
+(span-level by default; `--metric token` or `--metric type` for the
+token-level variants, see src/naamasetu/labels.py) with a 95%
 bootstrap CI and a one-sided p-value.
 
 Usage (one --pair per language):
@@ -14,7 +15,7 @@ Usage (one --pair per language):
                   runs/eval/xlmr_augmented_te_predictions.jsonl \
         --out-dir results --name xlmr
 
-Writes <out-dir>/significance_<name>.{csv,md} (`_token` appended for --metric token).
+Writes <out-dir>/significance_<name>.{csv,md} (`_token` / `_type` appended for the other metrics).
 """
 
 import argparse
@@ -41,7 +42,7 @@ def main():
     ap.add_argument("--seed", type=int, default=12345)
     ap.add_argument("--out-dir", default="results")
     ap.add_argument("--name", default="xlmr")
-    ap.add_argument("--metric", choices=["span", "token"], default="span")
+    ap.add_argument("--metric", choices=["span", "token", "type"], default="span")
     args = ap.parse_args()
 
     rows = []
@@ -59,7 +60,7 @@ def main():
               f"p={r['p_value']:.4f}")
 
     os.makedirs(args.out_dir, exist_ok=True)
-    suffix = "" if args.metric == "span" else "_token"
+    suffix = "" if args.metric == "span" else f"_{args.metric}"
     base = os.path.join(args.out_dir, f"significance_{args.name}{suffix}")
     with open(base + ".csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))

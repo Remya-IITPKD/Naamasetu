@@ -42,19 +42,20 @@ TODO — say how these were chosen (grid search on which data? or set a priori?)
 
 * Primary metric: span-level exact-match micro P/R/F1 over PER/LOC/ORG
   (`src/naamasetu/labels.span_prf`, unit-tested in `tests/test_labels.py`).
-* Also reported: token-level micro P/R/F1 over the non-O tags
-  (`labels.token_prf`), i.e. sklearn micro F1 on first-sub-token labels. This is
-  the metric the training loop logs as `test_f1` and uses for dev selection; it
-  is higher than span F1 because partly correct entities earn partial credit.
-  Always state which one a number is.
-* The test set is the Naamapadam gold test split. We never use it for LR or
-  checkpoint selection.
+* Also reported, from the same predictions:
+  * token-level micro P/R/F1 over the non-O BIO tags (`labels.token_prf`);
+  * type-level micro P/R/F1 after merging B-/I- into PER/LOC/ORG
+    (`labels.type_token_prf`). This is the `entity_micro_F1` the training
+    scripts print. It is word-level, not entity-level, and is the most
+    lenient of the three.
+* Dev selection used token-level F1 on the dev set (the Trainer's `f1`).
+  State which metric any reported number uses.
 * The two XLM-R settings are evaluated on byte-identical test files.
 * Each configuration was trained once (seed 42). Instead of seed averaging,
   we test whether the augmented model beats the gold-only model with a
   **paired bootstrap** over test sentences (10,000 resamples;
   `scripts/08_bootstrap_significance.py`), reporting the F1 gain, its 95% CI
-  and a one-sided p-value per language (`results/significance_xlmr.md`).
+  and a one-sided p-value per language (`results/significance_xlmr*.md`, one file per metric).
   This measures test-set sampling variance, not training-seed variance.
 * Test numbers were produced with `scripts/06_evaluate.py` on the saved
   dev-selected models, so every reported number uses the same metric code.

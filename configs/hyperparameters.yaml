@@ -39,7 +39,7 @@ fine_tuning:                  # scripts/05_train_ner.py
   seed: 42                    # single training seed; see significance test below
 
 evaluation:
-  metric: span-level exact-match micro F1 over PER/LOC/ORG (CoNLL); token-level micro F1 also reported
+  metric: span-level exact-match micro F1 over PER/LOC/ORG (CoNLL); token-level (BIO) and type-level (B/I merged) micro F1 also reported
   test_set: Naamapadam gold test (never used for selection)
   significance: paired bootstrap over test sentences, 10000 resamples, seed 12345
                 (scripts/08_bootstrap_significance.py)

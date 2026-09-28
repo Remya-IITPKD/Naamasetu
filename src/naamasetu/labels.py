@@ -75,6 +75,38 @@ def token_prf(y_true_seqs, y_pred_seqs):
     return _prf(tp, fp, fn)
 
 
+def to_type(tag):
+    """B-PER / I-PER -> PER; O -> O."""
+    return tag.split("-", 1)[1] if "-" in tag else "O"
+
+
+def type_token_prf(y_true_seqs, y_pred_seqs, entity_types=ENTITY_TYPES):
+    """Token-level micro P/R/F1 after merging B-/I- into the entity type.
+
+    Each word counts as PER, LOC, ORG or O; micro-averaged over the entity
+    types (O excluded). Returns (micro_p, micro_r, micro_f1), {type: (p, r, f1, support)}.
+    Most lenient of the three metrics here: a word is right if its type is
+    right, whatever its B/I position.
+    """
+    tp = {e: 0 for e in entity_types}; fp = dict(tp); fn = dict(tp); support = dict(tp)
+    for t_seq, p_seq in zip(y_true_seqs, y_pred_seqs):
+        for t, p in zip(t_seq, p_seq):
+            t, p = to_type(t), to_type(p)
+            if t in support:
+                support[t] += 1
+            if t == p:
+                if t in tp:
+                    tp[t] += 1
+            else:
+                if p in fp:
+                    fp[p] += 1
+                if t in fn:
+                    fn[t] += 1
+    micro = _prf(sum(tp.values()), sum(fp.values()), sum(fn.values()))
+    per_type = {e: (*_prf(tp[e], fp[e], fn[e]), support[e]) for e in entity_types}
+    return micro, per_type
+
+
 def span_prf(y_true_seqs, y_pred_seqs, entity_types=ENTITY_TYPES):
     """Span-level micro P/R/F1 plus per-type scores.
 

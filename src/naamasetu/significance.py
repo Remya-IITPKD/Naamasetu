@@ -4,7 +4,8 @@ Compares two systems (e.g. gold-only vs gold+silver) evaluated on the SAME
 test sentences. Sentences are resampled with replacement; in each resample,
 micro F1 is recomputed for both systems from per-sentence TP/FP/FN
 counts (Koehn, 2004; Berg-Kirkpatrick et al., 2012). `metric="span"` counts
-exact-match entities; `metric="token"` counts non-O tags (see labels.token_prf).
+exact-match entities; `metric="token"` counts non-O tags (labels.token_prf);
+`metric="type"` counts words after merging B-/I- (labels.type_token_prf).
 
 Reported:
     delta      F1(system) - F1(baseline) on the full test set
@@ -14,20 +15,22 @@ Reported:
 
 import numpy as np
 
-from .labels import ENTITY_TYPES, extract_spans
+from .labels import ENTITY_TYPES, extract_spans, to_type
 
 
 def sentence_counts(gold_seqs, pred_seqs, entity_types=ENTITY_TYPES, metric="span"):
     """Per-sentence (tp, fp, fn) arrays for micro span or token F1."""
-    if metric == "token":
+    if metric in ("token", "type"):
         tp, fp, fn = [], [], []
         for g, p in zip(gold_seqs, pred_seqs):
+            if metric == "type":
+                g, p = [to_type(x) for x in g], [to_type(x) for x in p]
             tp.append(sum(a == b != "O" for a, b in zip(g, p)))
             fp.append(sum(a != b and b != "O" for a, b in zip(g, p)))
             fn.append(sum(a != b and a != "O" for a, b in zip(g, p)))
         return np.array(tp), np.array(fp), np.array(fn)
     if metric != "span":
-        raise ValueError(f"metric must be 'span' or 'token', not {metric!r}")
+        raise ValueError(f"metric must be 'span', 'token' or 'type', not {metric!r}")
     types = set(entity_types)
     tp, fp, fn = [], [], []
     for g, p in zip(gold_seqs, pred_seqs):

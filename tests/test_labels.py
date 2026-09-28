@@ -2,7 +2,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-from naamasetu.labels import decode_tags, extract_spans, span_prf, token_prf  # noqa: E402
+from naamasetu.labels import (decode_tags, extract_spans, span_prf, token_prf,  # noqa: E402
+                              type_token_prf)
 
 
 def test_extract_simple():
@@ -34,6 +35,16 @@ def test_token_prf_counts_partial_entities():
     assert (p, r) == (2 / 3, 2 / 3) and abs(f - 2 / 3) < 1e-12
     (sp, sr, sf), _, _ = span_prf(gold, pred)
     assert sf < f                                    # span F1 is stricter
+
+
+def test_type_token_prf_ignores_bio_position():
+    gold = [["B-PER", "I-PER", "O", "B-LOC"]]
+    pred = [["I-PER", "B-PER", "B-ORG", "B-LOC"]]
+    # after merging B/I: PER PER O LOC vs PER PER ORG LOC -> tp 3, fp 1 (ORG), fn 0
+    (p, r, f), per = type_token_prf(gold, pred)
+    assert (p, r) == (0.75, 1.0)
+    assert per["PER"][2] == 1.0 and per["ORG"][:3] == (0.0, 0.0, 0.0)
+    assert token_prf(gold, pred)[2] < f               # stricter when B/I are kept
 
 
 def test_decode_int_tags():

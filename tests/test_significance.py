@@ -39,3 +39,11 @@ def test_token_counts_match_token_prf():
     tp, fp, fn = sentence_counts(GOLD, pred, metric="token")
     f = 2 * tp.sum() / (2 * tp.sum() + fp.sum() + fn.sum())
     assert abs(f - token_prf(GOLD, pred)[2]) < 1e-12
+
+
+def test_type_counts_match_type_token_prf():
+    from naamasetu.labels import type_token_prf
+    pred = [["I-PER", "B-PER", "B-ORG", "B-LOC"], ["B-ORG", "O"], ["O", "O"]] * 20
+    tp, fp, fn = sentence_counts(GOLD, pred, metric="type")
+    f = 2 * tp.sum() / (2 * tp.sum() + fp.sum() + fn.sum())
+    assert abs(f - type_token_prf(GOLD, pred)[0][2]) < 1e-12

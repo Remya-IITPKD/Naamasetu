@@ -104,10 +104,27 @@ All numbers are **span-level exact-match micro F1 on the Naamapadam gold test se
 ## Results
 
 Test F1 × 100 on the Naamapadam gold test set, one dev-selected model per cell
-(seed 42). Selected hyperparameters: `results/selected_runs.tsv`. Per-type
-scores: `results/test_span_scores.csv`.
+(seed 42). Selected hyperparameters: `results/selected_runs.tsv`. All metrics
+and per-type (PER/LOC/ORG) scores for every model: `results/test_scores.csv`.
 
-**Span-level (exact match), primary metric**
+We report three metrics computed from the same predictions (`src/naamasetu/labels.py`),
+from strictest to most lenient:
+
+* **span**: CoNLL exact match. An entity counts only if its boundaries and type are both right.
+* **token**: micro F1 over the non-O BIO tags, word by word.
+* **type**: micro F1 word by word after merging B-/I- into PER/LOC/ORG. This
+  is the `entity_micro_F1` printed by the training scripts.
+
+**Type-level (B/I merged)**
+
+| Model | Setting | as | gu | kn | ml | mr | or | pa | ta | te | Avg |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| mbert | augmented | 67.47 | 83.24 | 85.26 | 83.71 | 86.61 | 30.49 | 81.42 | 78.12 | 87.04 | 75.93 |
+| xlmr | gold | 70.45 | 83.43 | 85.69 | 85.10 | 84.83 | 54.43 | 80.88 | 77.49 | 88.38 | 78.96 |
+| xlmr | augmented | 72.09 | 84.08 | 85.53 | 84.94 | 86.26 | 55.00 | 81.50 | 78.91 | 86.98 | 79.48 |
+| xlmr | Δ | +1.64 | +0.65 | -0.16 | -0.16 | +1.44 | +0.57 | +0.62 | +1.42 | -1.39 | |
+
+**Span-level (exact match)**
 
 | Model | Setting | as | gu | kn | ml | mr | or | pa | ta | te | Avg |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -116,7 +133,7 @@ scores: `results/test_span_scores.csv`.
 | xlmr | augmented | 50.00 | 78.45 | 78.46 | 77.97 | 79.94 | 41.17 | 68.90 | 70.17 | 78.76 | 69.31 |
 | xlmr | Δ | +10.00 | +0.68 | -0.08 | +0.57 | +1.56 | +2.17 | +0.43 | +3.42 | -2.14 | |
 
-**Token-level (micro over non-O tags), for comparison with token-based reporting**
+**Token-level (BIO tags)**
 
 | Model | Setting | as | gu | kn | ml | mr | or | pa | ta | te | Avg |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -126,7 +143,21 @@ scores: `results/test_span_scores.csv`.
 | xlmr | Δ | +1.64 | +1.03 | -0.27 | -0.02 | +1.86 | +0.80 | +0.77 | +2.64 | -1.02 | |
 
 **Is the XLM-R gain significant?** Paired bootstrap over test sentences
-(10,000 resamples), one-sided p for "augmented > gold".
+(10,000 resamples), one-sided p for "augmented > gold". The 95% CI is two-sided.
+
+Type-level:
+
+| Lang | Gold F1 | Aug F1 | Δ | 95% CI | p |
+|---|---|---|---|---|---|
+| as | 70.45 | 72.09 | +1.64 | [-2.86, +8.84] | 0.2831 |
+| gu | 83.43 | 84.08 | +0.65 | [-0.33, +1.62] | 0.0938 |
+| kn | 85.69 | 85.53 | -0.16 | [-1.25, +0.92] | 0.6072 |
+| ml | 85.10 | 84.94 | -0.16 | [-1.36, +1.02] | 0.5963 |
+| mr | 84.83 | 86.26 | +1.44 | [+0.41, +2.51] | 0.0030 |
+| or | 54.43 | 55.00 | +0.57 | [-2.19, +3.13] | 0.3231 |
+| pa | 80.88 | 81.50 | +0.62 | [-0.60, +1.81] | 0.1582 |
+| ta | 77.49 | 78.91 | +1.42 | [-0.29, +3.29] | 0.0520 |
+| te | 88.38 | 86.98 | -1.39 | [-2.90, -0.02] | 0.9761 |
 
 Span-level:
 
@@ -158,16 +189,13 @@ Token-level:
 
 Notes:
 
-* The Assamese (51 sentences) and Odia test sets are small, so their scores and
-  CIs are very wide; treat those differences with caution.
+* The Assamese test set has 51 sentences and 24 entities, so its scores and
+  CIs are very wide. The Odia test set is also small in entities; treat both with caution.
 * mBERT was trained on the augmented data only. The mBERT gold-only baseline
-  in the paper is **cited from the Naamapadam paper** (Mhaskar et al., 2023),
+  in the paper is **cited from the Naamapadam paper** (Mhaske et al., 2023),
   not re-run here, so it is not in these tables and has no significance test
   (that needs per-sentence predictions). See `docs/REPRODUCIBILITY.md` for the
   caveats of that comparison.
-* Token-level F1 is always higher than span-level F1 because it gives credit
-  for partly correct entities. Both come from the same predictions
-  (`scripts/06_evaluate.py`).
 
 ## Data
 

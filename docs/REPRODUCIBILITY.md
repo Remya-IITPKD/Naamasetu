@@ -29,8 +29,11 @@ All values are in `configs/hyperparameters.yaml`.
   seed 42, best epoch restored by dev F1.
 * The LR / batch size selected for every run is listed in
   `results/selected_runs.tsv`.
-* mBERT was trained on the augmented data only; there is no mBERT gold-only
-  baseline, so the gold-vs-augmented comparison is reported for XLM-R.
+* mBERT was trained on the augmented data only. The mBERT gold-only numbers
+  are **taken from the Naamapadam paper** (Mhaskar et al., 2023), not
+  reproduced. The XLM-R gold-vs-augmented comparison is fully controlled (same
+  code, data version, selection and metric) and is the one tested for
+  significance.
 
 Projection weights (α=0.6, β=0.2, γ=0.2, λ=0.15, θ=0.8, τ=0.40, K=2):
 TODO — say how these were chosen (grid search on which data? or set a priori?).
@@ -55,6 +58,23 @@ TODO — say how these were chosen (grid search on which data? or set a priori?)
   This measures test-set sampling variance, not training-seed variance.
 * Test numbers were produced with `scripts/06_evaluate.py` on the saved
   dev-selected models, so every reported number uses the same metric code.
+
+### Caveats for the cited mBERT baseline
+
+The published mBERT numbers and our augmented mBERT runs differ in more than
+the training data:
+
+* training code and hyperparameters (their fine-tuning setup vs. our LR sweep
+  and relative-loss early stopping);
+* possibly the metric: compare against the metric their table reports
+  (TODO: confirm span-level vs token-level from the Naamapadam paper) and use
+  the matching column from `results/` (`main_table.md` = span,
+  `main_table_token.md` = token);
+* possibly the test-set version (the HF release we evaluate on vs. the split
+  used in their paper; TODO: confirm the test sizes match their data table);
+* no per-sentence predictions, so no significance test is possible.
+
+Differences between the two rows are therefore indicative only.
 
 ## Compute
 

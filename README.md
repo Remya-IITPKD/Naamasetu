@@ -160,8 +160,11 @@ Notes:
 
 * The Assamese (51 sentences) and Odia test sets are small, so their scores and
   CIs are very wide; treat those differences with caution.
-* mBERT was trained on the augmented data only (no gold-only mBERT run), so
-  it has no Δ row.
+* mBERT was trained on the augmented data only. The mBERT gold-only baseline
+  in the paper is **cited from the Naamapadam paper** (Mhaskar et al., 2023),
+  not re-run here, so it is not in these tables and has no significance test
+  (that needs per-sentence predictions). See `docs/REPRODUCIBILITY.md` for the
+  caveats of that comparison.
 * Token-level F1 is always higher than span-level F1 because it gives credit
   for partly correct entities. Both come from the same predictions
   (`scripts/06_evaluate.py`).

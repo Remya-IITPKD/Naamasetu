@@ -1,6 +1,6 @@
-# Naamasetu: Named Entity Recognition in Low-Resource Indic Languages
+# Naamasetu: A Cross-Lingual Named Entity Transfer by Bridging Languages for Named Entity Recognition in Low-Resource Indic Languages
 
-Code and data for the ARR submission *"Naamasetu: Named Entity Recognition in Low-Resource Indic Languages"* (anonymous).
+Code and data for the ARR submission *"Naamasetu: A Cross-Lingual Named Entity Transfer by Bridging Languages for Named Entity Recognition in Low-Resource Indic Languages"* (anonymous).
 
 **What this repo does.** We mine English–Indic parallel sentences from comparable Wikipedia articles and tag the English side with an off-the-shelf NER model. We then project those labels onto nine Indic languages with a **hybrid word aligner**, which combines contextual semantic similarity, phonetic (Metaphone) similarity and romanised-spelling similarity, plus an entity bonus. Finally, we fine-tune mBERT and XLM-R on the *gold* Naamapadam training set augmented with this *silver* data for PER/LOC/ORG NER, and compare with the published Naamapadam baseline.
 

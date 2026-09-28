@@ -8,15 +8,6 @@ mbert,augmented,or,1,27.64,0.00
 mbert,augmented,pa,1,77.08,0.00
 mbert,augmented,ta,1,75.42,0.00
 mbert,augmented,te,1,84.56,0.00
-xlmr,gold,as,1,70.45,0.00
-xlmr,gold,gu,1,81.19,0.00
-xlmr,gold,kn,1,83.84,0.00
-xlmr,gold,ml,1,82.46,0.00
-xlmr,gold,mr,1,82.42,0.00
-xlmr,gold,or,1,49.00,0.00
-xlmr,gold,pa,1,76.76,0.00
-xlmr,gold,ta,1,73.35,0.00
-xlmr,gold,te,1,85.84,0.00
 xlmr,augmented,as,1,72.09,0.00
 xlmr,augmented,gu,1,82.23,0.00
 xlmr,augmented,kn,1,83.57,0.00

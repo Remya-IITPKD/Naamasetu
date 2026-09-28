@@ -2,7 +2,7 @@
 
 Code and data for the ARR submission *"Naamasetu: A Cross-lingual Named Entity Transfer by Bridging Languages"* (anonymous).
 
-**What this repo does.** We mine English–Indic parallel sentences from comparable Wikipedia articles and tag the English side with an off-the-shelf NER model. We then project those labels onto nine Indic languages with a **hybrid word aligner**, which combines contextual semantic similarity, phonetic (Metaphone) similarity and romanised-spelling similarity, plus an entity bonus. Finally, we check whether adding this *silver* data to the *gold* Naamapadam training set improves PER/LOC/ORG NER with mBERT and XLM-R.
+**What this repo does.** We mine English–Indic parallel sentences from comparable Wikipedia articles and tag the English side with an off-the-shelf NER model. We then project those labels onto nine Indic languages with a **hybrid word aligner**, which combines contextual semantic similarity, phonetic (Metaphone) similarity and romanised-spelling similarity, plus an entity bonus. Finally, we fine-tune mBERT and XLM-R on the *gold* Naamapadam training set augmented with this *silver* data for PER/LOC/ORG NER, and compare with the published Naamapadam baseline.
 
 Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (mr), Odia (or), Punjabi (pa), Tamil (ta), Telugu (te).
 
@@ -25,9 +25,8 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
         │  05_train_ner.py            mBERT / XLM-R, LR sweep chosen on dev
         ▼
  dev-selected model per language
-        │  06_evaluate.py             span-level P/R/F1 on the gold test set
-        │  07_aggregate_results.py    → results/main_table.{md,tex}
-        │  08_bootstrap_significance.py  gold vs augmented: Δ, 95% CI, p
+        │  06_evaluate.py             type-, span- and token-level P/R/F1 on the gold test set
+        │  07_aggregate_results.py    → results/main_table*.{md,tex}
         ▼
  results/
 ```
@@ -38,19 +37,20 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 .
 ├── src/naamasetu/            shared library
 │   ├── languages.py         language registry (scripts, codes, Unicode blocks)
-│   ├── labels.py            BIO schema + span-level P/R/F1 (CoNLL exact match)
-│   ├── significance.py      paired bootstrap test
+│   ├── labels.py            BIO schema + type-, span- and token-level P/R/F1
+│   ├── significance.py      paired bootstrap test (optional tool)
 │   └── data.py              JSONL I/O, sub-word label alignment
 ├── scripts/                 one entry point per stage (run in order)
 │   ├── 00_prepare_naamapadam.py
 │   ├── 01_extract_parallel.py
 │   ├── 02_project_labels.py
 │   ├── 03_filter_silver.py
+│   ├── 03b_consistency_filter.py  (optional) keep silver sentences a gold-trained model agrees with
 │   ├── 04_merge_silver_gold.py
 │   ├── 05_train_ner.py
 │   ├── 06_evaluate.py
 │   ├── 07_aggregate_results.py
-│   ├── 08_bootstrap_significance.py
+│   ├── 08_bootstrap_significance.py  (optional) paired test between two models
 │   └── analysis/            alignment coverage + intrinsic comparisons
 ├── configs/hyperparameters.yaml   every value used for reported numbers
 ├── slurm/                   batch templates (projection, training)
@@ -85,7 +85,7 @@ On a SLURM cluster:
 ```bash
 sbatch --export=ALL,TGT_LANG=mr slurm/project.slurm
 sbatch --array=0 --export=ALL,TGT_LANG=mr,MODEL=xlmr,SETTING=augmented slurm/train.slurm
-sbatch --array=0 --export=ALL,TGT_LANG=mr,MODEL=xlmr,SETTING=gold      slurm/train.slurm
+sbatch --array=0 --export=ALL,TGT_LANG=mr,MODEL=mbert,SETTING=augmented slurm/train.slurm
 python scripts/07_aggregate_results.py
 ```
 
@@ -93,109 +93,52 @@ python scripts/07_aggregate_results.py
 
 | Step | Command | Output |
 |---|---|---|
-| Baseline (gold only) | `slurm/train.slurm` with `SETTING=gold` | `runs/*/gold/*/seed42/` |
-| Augmented (gold + silver) | `slurm/train.slurm` with `SETTING=augmented` | `runs/*/augmented/*/seed42/` |
+| Augmented (gold + silver) | `slurm/train.slurm` with `SETTING=augmented`, `MODEL=mbert` / `xlmr` | `runs/*/augmented/*/seed42/` |
 | Test evaluation | `scripts/06_evaluate.py --save-predictions` on each dev-selected `final_model` | metrics + predictions |
-| Table | `python scripts/07_aggregate_results.py` | `results/main_table.{md,tex}` |
-| Significance | `python scripts/08_bootstrap_significance.py --pair …` | `results/significance_xlmr.{md,csv}` |
+| Table | `python scripts/07_aggregate_results.py --metric test_type_f1` | `results/main_table_type.{md,tex}` |
 
-All numbers are **span-level exact-match micro F1 on the Naamapadam gold test set**. Learning rate (and, for the gold baseline, batch size) is selected **on dev only**; the test set is used once. Each configuration was trained with one seed (42); significance comes from a paired bootstrap over test sentences (see `docs/REPRODUCIBILITY.md`).
+All numbers are **F1 on the Naamapadam gold test sets**; the paper's tables use the type-level metric (see `docs/REPRODUCIBILITY.md`). The learning rate is selected **on dev only**; the test set is used once. Each configuration was trained with one seed (42).
 
 ## Results
 
-Test F1 × 100 on the Naamapadam gold test set, one dev-selected model per cell
-(seed 42). Selected hyperparameters: `results/selected_runs.tsv`. All metrics
-and per-type (PER/LOC/ORG) scores for every model: `results/test_scores.csv`.
+NER F1 × 100 on the Naamapadam gold test sets. Augmented = Naamapadam training data +
+Naamasetu silver data; one model per cell (seed 42, learning rate chosen on dev, see
+`results/selected_runs.tsv`). All metrics and per-type scores: `results/test_scores.csv`.
 
-We report three metrics computed from the same predictions (`src/naamasetu/labels.py`),
-from strictest to most lenient:
+**Table 6** (paper layout; word-level micro-F1, B-/I- merged, `O` excluded)
 
-* **span**: CoNLL exact match. An entity counts only if its boundaries and type are both right.
-* **token**: micro F1 over the non-O BIO tags, word by word.
-* **type**: micro F1 word by word after merging B-/I- into PER/LOC/ORG. This
-  is the `entity_micro_F1` printed by the training scripts.
+| Language | Naamapadam mBERT (cited) | Augmented mBERT | Augmented XLM-R |
+|---|---|---|---|
+| Malayalam | 81.49 | 83.71 | **84.94** |
+| Assamese | 45.37 | 67.47 | **72.09** |
+| Marathi | 81.37 | **86.61** | 86.26 |
+| Odia | 25.01 | 30.49 | **55.00** |
+| Gujarati | 80.59 | 83.24 | **84.08** |
+| Kannada | 80.33 | 85.26 | **85.53** |
+| Punjabi | 71.51 | 81.42 | **81.50** |
+| Telugu | 82.49 | **87.04** | 86.98 |
+| Tamil | 73.36 | 78.12 | **78.91** |
 
-**Type-level (B/I merged)**
+Naamapadam mBERT: reported by Mhaske et al. (2023), Table 5 (monolingual mBERT), not re-run. Because this baseline is cited rather than retrained, the difference to our models reflects the whole system (training data, encoder and training setup), not the silver data alone.
 
-| Model | Setting | as | gu | kn | ml | mr | or | pa | ta | te | Avg |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| mbert | augmented | 67.47 | 83.24 | 85.26 | 83.71 | 86.61 | 30.49 | 81.42 | 78.12 | 87.04 | 75.93 |
-| xlmr | gold | 70.45 | 83.43 | 85.69 | 85.10 | 84.83 | 54.43 | 80.88 | 77.49 | 88.38 | 78.96 |
-| xlmr | augmented | 72.09 | 84.08 | 85.53 | 84.94 | 86.26 | 55.00 | 81.50 | 78.91 | 86.98 | 79.48 |
-| xlmr | Δ | +1.64 | +0.65 | -0.16 | -0.16 | +1.44 | +0.57 | +0.62 | +1.42 | -1.39 | |
+Other metrics computed from the same predictions (`src/naamasetu/labels.py`):
 
-**Span-level (exact match)**
+* **span** (CoNLL exact match: boundaries and type must be right): `results/main_table.md`
 
 | Model | Setting | as | gu | kn | ml | mr | or | pa | ta | te | Avg |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | mbert | augmented | 48.00 | 77.09 | 78.17 | 77.83 | 79.87 | 27.45 | 69.60 | 70.14 | 79.17 | 67.48 |
-| xlmr | gold | 40.00 | 77.77 | 78.54 | 77.40 | 78.38 | 39.00 | 68.46 | 66.75 | 80.90 | 67.47 |
 | xlmr | augmented | 50.00 | 78.45 | 78.46 | 77.97 | 79.94 | 41.17 | 68.90 | 70.17 | 78.76 | 69.31 |
-| xlmr | Δ | +10.00 | +0.68 | -0.08 | +0.57 | +1.56 | +2.17 | +0.43 | +3.42 | -2.14 | |
 
-**Token-level (BIO tags)**
+* **token** (micro F1 over the non-O BIO tags): `results/main_table_token.md`
 
 | Model | Setting | as | gu | kn | ml | mr | or | pa | ta | te | Avg |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | mbert | augmented | 67.47 | 81.16 | 83.34 | 81.71 | 84.58 | 27.64 | 77.08 | 75.42 | 84.56 | 73.66 |
-| xlmr | gold | 70.45 | 81.19 | 83.84 | 82.46 | 82.42 | 49.00 | 76.76 | 73.35 | 85.84 | 76.15 |
 | xlmr | augmented | 72.09 | 82.23 | 83.57 | 82.44 | 84.28 | 49.80 | 77.54 | 75.99 | 84.82 | 76.97 |
-| xlmr | Δ | +1.64 | +1.03 | -0.27 | -0.02 | +1.86 | +0.80 | +0.77 | +2.64 | -1.02 | |
 
-**Is the XLM-R gain significant?** Paired bootstrap over test sentences
-(10,000 resamples), one-sided p for "augmented > gold". The 95% CI is two-sided.
-
-Type-level:
-
-| Lang | Gold F1 | Aug F1 | Δ | 95% CI | p |
-|---|---|---|---|---|---|
-| as | 70.45 | 72.09 | +1.64 | [-2.86, +8.84] | 0.2831 |
-| gu | 83.43 | 84.08 | +0.65 | [-0.33, +1.62] | 0.0938 |
-| kn | 85.69 | 85.53 | -0.16 | [-1.25, +0.92] | 0.6072 |
-| ml | 85.10 | 84.94 | -0.16 | [-1.36, +1.02] | 0.5963 |
-| mr | 84.83 | 86.26 | +1.44 | [+0.41, +2.51] | 0.0030 |
-| or | 54.43 | 55.00 | +0.57 | [-2.19, +3.13] | 0.3231 |
-| pa | 80.88 | 81.50 | +0.62 | [-0.60, +1.81] | 0.1582 |
-| ta | 77.49 | 78.91 | +1.42 | [-0.29, +3.29] | 0.0520 |
-| te | 88.38 | 86.98 | -1.39 | [-2.90, -0.02] | 0.9761 |
-
-Span-level:
-
-| Lang | Gold F1 | Aug F1 | Δ | 95% CI | p |
-|---|---|---|---|---|---|
-| as | 40.00 | 50.00 | +10.00 | [+0.85, +24.56] | 0.0189 |
-| gu | 77.77 | 78.45 | +0.68 | [-0.61, +2.01] | 0.1529 |
-| kn | 78.54 | 78.46 | -0.08 | [-1.63, +1.47] | 0.5394 |
-| ml | 77.40 | 77.97 | +0.57 | [-1.07, +2.21] | 0.2467 |
-| mr | 78.38 | 79.94 | +1.56 | [+0.27, +2.86] | 0.0082 |
-| or | 39.00 | 41.17 | +2.17 | [-0.27, +4.60] | 0.0399 |
-| pa | 68.46 | 68.90 | +0.43 | [-1.12, +1.96] | 0.2915 |
-| ta | 66.75 | 70.17 | +3.42 | [+0.82, +6.07] | 0.0042 |
-| te | 80.90 | 78.76 | -2.14 | [-4.15, -0.27] | 0.9873 |
-
-Token-level:
-
-| Lang | Gold F1 | Aug F1 | Δ | 95% CI | p |
-|---|---|---|---|---|---|
-| as | 70.45 | 72.09 | +1.64 | [-2.86, +8.84] | 0.2831 |
-| gu | 81.19 | 82.23 | +1.03 | [-0.17, +2.26] | 0.0451 |
-| kn | 83.84 | 83.57 | -0.27 | [-1.49, +0.93] | 0.6633 |
-| ml | 82.46 | 82.44 | -0.02 | [-1.31, +1.26] | 0.5072 |
-| mr | 82.42 | 84.28 | +1.86 | [+0.71, +3.05] | 0.0005 |
-| or | 49.00 | 49.80 | +0.80 | [-1.99, +3.41] | 0.2698 |
-| pa | 76.76 | 77.54 | +0.77 | [-0.53, +2.06] | 0.1202 |
-| ta | 73.35 | 75.99 | +2.64 | [+0.68, +4.76] | 0.0046 |
-| te | 85.84 | 84.82 | -1.02 | [-2.58, +0.42] | 0.9130 |
-
-Notes:
-
-* The Assamese test set has 51 sentences and 24 entities, so its scores and
-  CIs are very wide. The Odia test set is also small in entities; treat both with caution.
-* mBERT was trained on the augmented data only. The mBERT gold-only baseline
-  in the paper is **cited from the Naamapadam paper** (Mhaske et al., 2023),
-  not re-run here, so it is not in these tables and has no significance test
-  (that needs per-sentence predictions). See `docs/REPRODUCIBILITY.md` for the
-  caveats of that comparison.
+The Assamese test set has 51 sentences (24 entities) and the Odia one is also small, so
+their scores are uncertain.
 
 ## Data
 

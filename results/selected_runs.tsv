@@ -1,13 +1,4 @@
 model	setting	lang	batch_size	lr	dev_f1	dev_set
-xlmr	gold	as	32	1e-05	0.4918	gold dev
-xlmr	gold	gu	16	3e-05	0.8451	gold dev
-xlmr	gold	kn	8	3e-05	0.8263	gold dev
-xlmr	gold	ml	16	5e-05	0.8543	gold dev
-xlmr	gold	mr	16	5e-05	0.8455	gold dev
-xlmr	gold	or	32	5e-05	0.4831	gold dev
-xlmr	gold	pa	8	3e-05	0.7942	gold dev
-xlmr	gold	ta	16	3e-05	0.8097	gold dev
-xlmr	gold	te	16	1e-05	0.8431	gold dev
 xlmr	augmented	as	16	1e-05	0.4734	gold dev + 0.5% silver
 xlmr	augmented	gu	16	5e-05	0.8049	gold dev + 0.5% silver
 xlmr	augmented	kn	16	5e-05	0.7951	gold dev + 0.5% silver

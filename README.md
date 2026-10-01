@@ -13,6 +13,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 | The paper's results tables | [`results/paper_tables.md`](results/paper_tables.md) (also below, under Results) |
 | Every score for every model | [`results/test_scores.csv`](results/test_scores.csv) |
 | Hyperparameters of each reported model | [`results/selected_runs.tsv`](results/selected_runs.tsv), [`configs/hyperparameters.yaml`](configs/hyperparameters.yaml) |
+| The parallel sentence pairs and SimAlign / awesome-align outputs | `data/parallel/` (see [`data/README.md`](data/README.md)) |
 | The silver data and merged training sets | `data/projected/`, `data/augmented/` (see [`data/README.md`](data/README.md)) |
 | Compute, software versions, evaluation details | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) |
 | To retrain a model on the released data | [Quick start](#quick-start) below |
@@ -66,7 +67,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 ├── configs/hyperparameters.yaml   every value used for reported numbers
 ├── slurm/                   batch templates (projection, training)
 ├── run_pipeline.sh          end-to-end for one language
-├── data/                    released silver + merged data (see data/README.md)
+├── data/                    released parallel pairs, alignments, silver + merged data
 ├── results/                 aggregated tables (generated)
 ├── docs/REPRODUCIBILITY.md  compute, runtimes, variance, artifact licences
 └── tests/                   unit tests for metrics and projection
@@ -109,9 +110,9 @@ The reported models were selected on the gold dev split plus 0.5% held-out
 silver data; that merged dev file is not released, so the commands above use
 the gold dev split, and the selected learning rate can occasionally differ.
 
-The full pipeline from Wikipedia (`run_pipeline.sh`, `slurm/project.slurm`)
-also needs the parallel sentence pairs (Stages 1–2), which are not included in
-this release.
+The parallel sentence pairs (Stage 1 output) are released in `data/parallel/`,
+so the projection stage (`slurm/project.slurm`) can start from them after
+`gunzip`; see [`data/README.md`](data/README.md).
 
 ## Reproducing the main table
 
@@ -166,7 +167,7 @@ their scores are uncertain.
 
 ## Data
 
-The Naamasetu silver data and the merged training sets for all nine languages are included in this repository, gzipped, under `data/projected/` and `data/augmented/`. See [`data/README.md`](data/README.md) for the layout, formats and statistics.
+The parallel sentence pairs with their SimAlign and awesome-align word alignments, the Naamasetu silver data and the merged training sets for all nine languages are included in this repository, gzipped, under `data/parallel/`, `data/projected/` and `data/augmented/`. See [`data/README.md`](data/README.md) for the layout, formats and statistics.
 
 ## Licence
 

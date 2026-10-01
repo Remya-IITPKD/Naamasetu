@@ -7,12 +7,14 @@ runs/
 wandb/
 *.out
 *.err
-# data: only the released gzipped silver / merged files are tracked (see data/README.md)
+# data: only the released gzipped parallel / silver / merged files are tracked (see data/README.md)
 data/*
 !data/README.md
 !data/sample/
 !data/projected/
 !data/augmented/
+!data/parallel/
 data/projected/**/*.jsonl
 data/augmented/**/*.jsonl
+data/parallel/**/*.jsonl
 .DS_Store

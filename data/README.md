@@ -2,20 +2,26 @@
 
 ## Released in this repository
 
-The silver data and the merged training sets used for all reported results are
-included here, gzipped (each file < 100 MB):
+The parallel sentence pairs, the two baseline word alignments, the silver data and
+the merged training sets used for all reported results are included here, gzipped
+(each file < 100 MB):
 
 | Path | Contents |
 |---|---|
+| `data/parallel/<lang>/parallel_<lang>_en.jsonl.gz` | EN–Indic sentence pairs mined from Wikipedia (Stage 1 output) |
+| `data/parallel/<lang>/simalign_<lang>.jsonl.gz` | SimAlign word alignments of the pairs (baseline aligner) |
+| `data/parallel/<lang>/awesome_<lang>.jsonl.gz` | awesome-align word alignments of the pairs (baseline aligner) |
 | `data/projected/<lang>/silver_filtered_<lang>.jsonl.gz` | Naamasetu silver NER data after filtering (the "Silver (after filter)" column below) |
 | `data/augmented/<lang>/train_aug_<lang>.jsonl.gz` | merged training set: Naamapadam gold train + 99.5% of the silver data |
 
 Unpack with `gunzip -k data/*/*/*.jsonl.gz` (or read them directly with Python's
-`gzip.open`). The merged dev set is the Naamapadam gold dev split plus the 0.5% of
+`gzip.open`). Larger files in `data/parallel/` (ml, ta, te) are split at line
+boundaries into `<name>.part1.jsonl.gz`, `<name>.part2.jsonl.gz`, …; join them in
+order, e.g. `cat data/parallel/ml/simalign_ml.part{1..7}.jsonl.gz | gunzip > simalign_ml.jsonl`. The merged dev set is the Naamapadam gold dev split plus the 0.5% of
 silver sentences that are not in `train_aug_<lang>`; the gold splits come from
-`scripts/00_prepare_naamapadam.py`. The parallel sentence pairs, alignment
-outputs and Wikipedia title lists (Stage 1–2 intermediates) are not included in
-this release.
+`scripts/00_prepare_naamapadam.py`. The Wikipedia title lists (Stage 1 input) and
+the hybrid aligner's intermediate files (`alignment_results_<lang>.jsonl`,
+`silver_projected_<lang>.jsonl`) are not included in this release.
 
 Full layout when all stages are run:
 
@@ -53,6 +59,42 @@ Tag set: `O, B-PER, I-PER, B-ORG, I-ORG, B-LOC, I-LOC`.
  "alignments": [{"src_idx": 0, "tgt_idx": 3, "score": 0.91}]}
 ```
 `src_idx` indexes the whitespace-tokenised English sentence. `tgt_idx` indexes the indic-nlp-tokenised target sentence.
+
+### Parallel pairs and baseline alignments
+
+These are the files as produced by Stage 1 and by the two baseline aligners, released
+unchanged (only gzipped). Line counts:
+
+| Lang | Parallel pairs | SimAlign | awesome-align |
+|---|---|---|---|
+| as | 1,350 | 1,350 | 1,350 |
+| gu | 75,005 | 37,383 | 75,005 |
+| kn | 105,592 | 59,361 | 105,592 |
+| ml | 240,163 | 240,163 | 240,163 |
+| mr | 82,776 | 82,776 | 82,776 |
+| or | 23,010 | 23,010 | 23,010 |
+| pa | 128,364 | 71,047 | 128,364 |
+| ta | 299,637 | 79,400 | 299,637 |
+| te | 360,231 | 83,141 | 360,231 |
+
+Notes on these files:
+
+* Field names follow the target language code (`kn_sentence`, `kn_title`, …), as in
+  the format below. Exceptions: the Assamese pairs use `english_*` / `assamese_*`
+  (e.g. `english_sentence`, `assamese_sentence`), and the Gujarati awesome-align file
+  stores the Gujarati sentence under the key `ml_sentence`. The Malayalam pairs have
+  no URL fields.
+* SimAlign and awesome-align files have `en_sentence`, `<lang>_sentence` and an
+  `alignments` list of aligned word pairs (`{"<lang>_word": ..., "en_word": ...}`);
+  the SimAlign files also repeat the titles, URLs and cosine similarity of the pair.
+  The Malayalam SimAlign file uses a different layout: `sentence_id`, `english`,
+  `malayalam` and `aligned_words` (`{"en", "ml", "similarity"}`).
+* For gu, kn, pa, ta and te, SimAlign was run on a subset of the pairs (the counts above).
+* The pair counts differ slightly from the "Parallel pairs" column of the table below
+  for gu, kn, ml and pa (the counts there were taken from the extraction logs).
+* `scripts/02_project_labels.py` reads `en_sentence` and `<lang>_sentence`, so the
+  pair files can be fed to Stage 2 after `gunzip`; for Assamese, rename
+  `english_sentence` → `en_sentence` and `assamese_sentence` → `as_sentence` first.
 
 ## Statistics
 

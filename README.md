@@ -59,6 +59,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 │   ├── 00_prepare_naamapadam.py
 │   ├── 01_extract_parallel.py
 │   ├── 02_project_labels.py
+│   ├── naamasetu_align.py       Algorithm 1 of the paper, line by line (alignment + BIO projection)
 │   ├── 03_filter_silver.py
 │   ├── 03b_consistency_filter.py  (optional) keep silver sentences a gold-trained model agrees with
 │   ├── 04_merge_silver_gold.py

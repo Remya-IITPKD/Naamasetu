@@ -14,6 +14,8 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 | Every score for every model | [`results/test_scores.csv`](results/test_scores.csv) |
 | Hyperparameters of each reported model | [`results/selected_runs.tsv`](results/selected_runs.tsv), [`configs/hyperparameters.yaml`](configs/hyperparameters.yaml) |
 | The parallel sentence pairs and SimAlign / awesome-align outputs | `data/parallel/` (see [`data/README.md`](data/README.md)) |
+| The hybrid aligner's word alignments | `data/projected/<lang>/alignment_results_<lang>.jsonl.gz` |
+| Example: how the festival *Vishu* is labelled | [`docs/examples/vishu_ml.md`](docs/examples/vishu_ml.md) |
 | The silver data and merged training sets | `data/projected/`, `data/augmented/` (see [`data/README.md`](data/README.md)) |
 | Compute, software versions, evaluation details | [`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) |
 | To retrain a model on the released data | [Quick start](#quick-start) below |
@@ -167,7 +169,7 @@ their scores are uncertain.
 
 ## Data
 
-The parallel sentence pairs with their SimAlign and awesome-align word alignments, the Naamasetu silver data and the merged training sets for all nine languages are included in this repository, gzipped, under `data/parallel/`, `data/projected/` and `data/augmented/`. See [`data/README.md`](data/README.md) for the layout, formats and statistics.
+The parallel sentence pairs with their SimAlign, awesome-align and hybrid word alignments, the Naamasetu silver data and the merged training sets for all nine languages are included in this repository, gzipped, under `data/parallel/`, `data/projected/` and `data/augmented/`. See [`data/README.md`](data/README.md) for the layout, formats and statistics.
 
 ## Licence
 

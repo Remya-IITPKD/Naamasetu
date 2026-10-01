@@ -71,6 +71,14 @@ encoder (cased mBERT, XLM-R) and the training setup (LR sweep, relative-loss
 early stopping). The difference between the columns therefore measures the
 whole system, not the contribution of the silver data alone.
 
+### Alignment evaluation (Tables 2 and 6)
+
+Source/target word coverage and entity-word coverage of SimAlign, awesome-align and
+the hybrid aligner are computed from the released alignment files on the same 200
+sentence pairs per language (random, seed 42), with English entity words tagged by spaCy
+as in projection. No gold word alignments exist, so these are coverage measures, not
+precision. Method, results and commands: [`results/alignment_eval/README.md`](../results/alignment_eval/README.md).
+
 ## Compute
 
 | Stage | Hardware | Wall time per language | Total GPU hours |

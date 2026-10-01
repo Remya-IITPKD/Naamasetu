@@ -59,7 +59,12 @@ Tag set: `O, B-PER, I-PER, B-ORG, I-ORG, B-LOC, I-LOC`.
 {"en_sentence": "...", "tgt_sentence": "...",
  "alignments": [{"src_idx": 0, "tgt_idx": 3, "score": 0.91}]}
 ```
-`src_idx` indexes the whitespace-tokenised English sentence. `tgt_idx` indexes the indic-nlp-tokenised target sentence.
+This is the format `scripts/02_project_labels.py` writes: `src_idx` indexes the
+whitespace-tokenised English sentence and `tgt_idx` the indic-nlp-tokenised target
+sentence. **In the released `alignment_results_<lang>` files the two fields are swapped**
+(they were written by an earlier version of the script): there `src_idx` indexes the
+indic-nlp tokens of the normalised target sentence and `tgt_idx` indexes
+`en_sentence.split()`. `scripts/analysis/build_alignment_sample.py` reads them this way.
 
 ### Parallel pairs and baseline alignments
 
@@ -106,7 +111,10 @@ Notes on these files:
 (semantic + phonetic + romanised similarity, Algorithm 1), released unchanged
 (only gzipped; the 10 Malayalam pairs above are removed). Each line has `en_sentence`, the target sentence under
 `<lang>_sentence`, and `alignments` as in the format below
-(`{"src_idx", "tgt_idx", "score"}`). Line counts and the run each file comes from:
+(`{"src_idx", "tgt_idx", "score"}`, with the two index fields swapped as explained
+there). `score` is the hybrid score H (normalised per sentence), not a cosine. The
+alignment evaluation in `results/alignment_eval/` is computed from these files. Line counts
+and the run each file comes from:
 
 | Lang | Lines | Source file |
 |---|---|---|

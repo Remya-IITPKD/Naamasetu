@@ -29,6 +29,8 @@ coverage does not by itself show higher alignment precision.
 * **Target coverage:** hybrid best in all 9 languages.
 * **Entity-word coverage:** hybrid best in 8 of 9 languages (0.75–0.99); Malayalam is
   again the exception. Largest gain on Odia (0.462 → 0.845).
+* **Averages over the nine languages** (source / target / entity-word coverage): hybrid
+  0.836 / 0.877 / 0.889, SimAlign 0.682 / 0.705 / 0.783, awesome-align 0.363 / 0.447 / 0.497.
 
 ## Additional columns in `scores.csv`
 

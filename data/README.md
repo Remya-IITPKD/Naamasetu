@@ -63,15 +63,17 @@ Tag set: `O, B-PER, I-PER, B-ORG, I-ORG, B-LOC, I-LOC`.
 
 ### Parallel pairs and baseline alignments
 
-These are the files as produced by Stage 1 and by the two baseline aligners, released
-unchanged (only gzipped). Line counts:
+These are the files as produced by Stage 1 and by the two baseline aligners, gzipped,
+with two corrections: the first Malayalam pair (its English side was a transliterated,
+unrelated sentence) is removed from every Malayalam file, and the Gujarati sentence key
+in the awesome-align file is `gu_sentence`. Line counts:
 
 | Lang | Parallel pairs | SimAlign | awesome-align |
 |---|---|---|---|
 | as | 1,350 | 1,350 | 1,350 |
 | gu | 75,005 | 37,383 | 75,005 |
 | kn | 105,592 | 59,361 | 105,592 |
-| ml | 240,163 | 240,163 | 240,163 |
+| ml | 240,162 | 240,162 | 240,162 |
 | mr | 82,776 | 82,776 | 82,776 |
 | or | 23,010 | 23,010 | 23,010 |
 | pa | 128,364 | 71,047 | 128,364 |
@@ -82,17 +84,15 @@ Notes on these files:
 
 * Field names follow the target language code (`kn_sentence`, `kn_title`, …), as in
   the format below. Exceptions: the Assamese pairs use `english_*` / `assamese_*`
-  (e.g. `english_sentence`, `assamese_sentence`), and the Gujarati awesome-align file
-  stores the Gujarati sentence under the key `ml_sentence`. The Malayalam pairs have
-  no URL fields.
+  (e.g. `english_sentence`, `assamese_sentence`). The Malayalam pairs have no URL fields.
 * SimAlign and awesome-align files have `en_sentence`, `<lang>_sentence` and an
   `alignments` list of aligned word pairs (`{"<lang>_word": ..., "en_word": ...}`);
   the SimAlign files also repeat the titles, URLs and cosine similarity of the pair.
   The Malayalam SimAlign file uses a different layout: `sentence_id`, `english`,
   `malayalam` and `aligned_words` (`{"en", "ml", "similarity"}`).
-* For gu, kn, pa, ta and te, SimAlign was run on a subset of the pairs (the counts above).
-* The pair counts differ slightly from the "Parallel pairs" column of the table below
-  for gu, kn, ml and pa (the counts there were taken from the extraction logs).
+* The SimAlign runs for gu, kn, pa, ta and te did not finish, so those files cover only
+  part of the pairs (the counts above; for pa, ta and te exactly the first N pairs).
+  The SimAlign files for as, ml, mr and or cover all pairs.
 * `scripts/02_project_labels.py` reads `en_sentence` and `<lang>_sentence`, so the
   pair files can be fed to Stage 2 after `gunzip`; for Assamese, rename
   `english_sentence` → `en_sentence` and `assamese_sentence` → `as_sentence` first.
@@ -101,7 +101,7 @@ Notes on these files:
 
 `alignment_results_<lang>` holds the output of the Naamasetu hybrid aligner
 (semantic + phonetic + romanised similarity, Algorithm 1), released unchanged
-(only gzipped). Each line has `en_sentence`, the target sentence under
+(only gzipped; the first Malayalam pair is removed as above). Each line has `en_sentence`, the target sentence under
 `<lang>_sentence`, and `alignments` as in the format below
 (`{"src_idx", "tgt_idx", "score"}`). Line counts and the run each file comes from:
 
@@ -110,7 +110,7 @@ Notes on these files:
 | as | 1,289 | `alignment_results_as_2_new.jsonl` |
 | gu | 74,964 | `alignment_results_gu_2_new.jsonl` |
 | kn | 105,550 | `alignment_results_kn.jsonl` |
-| ml | 240,102 | `alignment_results_ml.jsonl` |
+| ml | 240,101 | `alignment_results_ml.jsonl` |
 | mr | 82,973 | `alignment_results_mr_2_new.jsonl` |
 | or | 22,986 | `alignment_results_or_2_new.jsonl` |
 | pa | 128,322 | `alignment_results_pa.jsonl` |
@@ -125,12 +125,12 @@ filtered silver; merged dev = gold dev + the other 0.5%. The test set is the unc
 | Lang | Parallel pairs (cos ≥ 0.7) | Silver (after filter) | Gold train | Gold dev | Gold test | Merged train | Merged dev |
 |---|---|---|---|---|---|---|---|
 | as | 1,350 | 632 | 10,266 | 52 | 51 | 10,895 | 55 |
-| gu | 75,017 | 43,972 | 472,845 | 2,389 | 1,076 | 516,597 | 2,609 |
-| kn | 105,550 | 48,911 | 471,763 | 2,381 | 1,019 | 520,429 | 2,626 |
-| ml | 240,000 | 131,224 | 716,652 | 3,618 | 974 | 847,220 | 4,274 |
+| gu | 75,005 | 43,972 | 472,845 | 2,389 | 1,076 | 516,597 | 2,609 |
+| kn | 105,592 | 48,911 | 471,763 | 2,381 | 1,019 | 520,429 | 2,626 |
+| ml | 240,162 | 131,224 | 716,652 | 3,618 | 974 | 847,220 | 4,274 |
 | mr | 82,776 | 44,415 | 455,248 | 2,300 | 1,080 | 499,441 | 2,522 |
 | or | 23,010 | 11,122 | 196,793 | 993 | 994 | 207,859 | 1,049 |
-| pa | 128,322 | 81,409 | 463,534 | 2,340 | 993 | 544,536 | 2,747 |
+| pa | 128,364 | 81,409 | 463,534 | 2,340 | 993 | 544,536 | 2,747 |
 | ta | 299,637 | 172,150 | 497,882 | 2,795 | 758 | 669,171 | 3,656 |
 | te | 360,231 | 233,892 | 507,741 | 2,700 | 847 | 740,464 | 3,869 |
 

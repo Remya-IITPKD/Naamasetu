@@ -71,7 +71,7 @@ encoder (cased mBERT, XLM-R) and the training setup (LR sweep, relative-loss
 early stopping). The difference between the columns therefore measures the
 whole system, not the contribution of the silver data alone.
 
-### Alignment evaluation (Tables 2 and 6)
+### Alignment evaluation (Tables 2, 3 and 7)
 
 Source/target word coverage and entity-word coverage of SimAlign, awesome-align and
 the hybrid aligner are computed from the released alignment files on the same 200

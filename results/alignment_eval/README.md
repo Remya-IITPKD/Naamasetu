@@ -1,4 +1,4 @@
-# Alignment evaluation (paper Tables 2 and 6)
+# Alignment evaluation (paper Tables 2, 3 and 7)
 
 Intrinsic comparison of the Naamasetu hybrid aligner with SimAlign and awesome-align,
 computed entirely from the released alignment files. The tables are in
@@ -14,7 +14,8 @@ kn, pa, ta and te, so the pool there is smaller; see `data/README.md`).
 |---|---|---|
 | Source coverage | fraction of English words with at least one alignment link | Table 2 |
 | Target coverage | fraction of target-language words with at least one alignment link | Table 2 |
-| Entity-word coverage | fraction of English **entity** words with at least one link; entity words are tagged with spaCy (`en_core_web_sm`, PERSON→PER, GPE/LOC→LOC, ORG→ORG), exactly as in `scripts/02_project_labels.py` | Table 6 |
+| Similarity of entity-word links | mean similarity of the links on English entity words, each aligner with its own measure: mBERT cosine for SimAlign and awesome-align (`ent_cos`), the hybrid score H for the hybrid aligner (`hybrid_H`); see "Additional columns" below | Table 3 |
+| Entity-word coverage | fraction of English **entity** words with at least one link; entity words are tagged with spaCy (`en_core_web_sm`, PERSON→PER, GPE/LOC→LOC, ORG→ORG), exactly as in `scripts/02_project_labels.py` | Table 7 |
 
 Words are whitespace-separated words of each sentence, the same for every aligner, so
 the three aligners are compared on identical denominators.
@@ -29,6 +30,9 @@ coverage does not by itself show higher alignment precision.
 * **Target coverage:** hybrid best in all 9 languages.
 * **Entity-word coverage:** hybrid best in 8 of 9 languages (0.75–0.99); Malayalam is
   again the exception. Largest gain on Odia (0.462 → 0.845).
+* **Similarity of entity-word links (Table 3):** SimAlign 0.53–0.69 and awesome-align
+  0.66–0.76 (mBERT cosine); hybrid 0.78–0.84 (hybrid score H). The columns are on different
+  scales (see below), so the table describes each aligner and does not rank them.
 * **Averages over the nine languages** (source / target / entity-word coverage): hybrid
   0.836 / 0.877 / 0.889, SimAlign 0.682 / 0.705 / 0.783, awesome-align 0.363 / 0.447 / 0.497.
 
@@ -72,7 +76,7 @@ Fewer than 0.3% of links cannot be mapped (counts are printed when the sample is
 |---|---|
 | `sample_<lang>.jsonl` | the 200 sampled pairs: English and target words, English BIO tags, and the links of all three aligners as `[english_word_index, target_word_index]` |
 | `scores.csv` | all measures above, per language and aligner |
-| `tables.md` | Tables 2 and 6 of the paper |
+| `tables.md` | Tables 2, 3 and 7 of the paper |
 
 ## Reproduce
 

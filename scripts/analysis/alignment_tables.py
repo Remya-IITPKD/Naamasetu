@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Write the paper's alignment tables (Table 2: word coverage; Table 6: entity-word
-coverage) as Markdown from the scores.csv written by alignment_eval_scores.py.
+"""Write the paper's alignment tables (Table 2: word coverage; Table 3: similarity of the
+entity-word links; Table 7: entity-word coverage) as Markdown from the scores.csv written by alignment_eval_scores.py.
 
 Usage:
     python scripts/analysis/alignment_tables.py --scores results/alignment_eval/scores.csv \
@@ -10,11 +10,17 @@ Usage:
 import argparse
 import csv
 from collections import Counter
+from decimal import Decimal, ROUND_HALF_UP
 
 LANGS = [("ml", "Malayalam"), ("ta", "Tamil"), ("te", "Telugu"), ("kn", "Kannada"),
          ("mr", "Marathi"), ("gu", "Gujarati"), ("pa", "Punjabi"), ("as", "Assamese"),
          ("or", "Odia")]
 NAMES = {"awesome": "AwesomeAlign", "simalign": "SimAlign", "hybrid": "Hybrid"}
+
+
+def r2(x):
+    """Round half up to two decimals (0.815 -> 0.82, which float formatting gets wrong)."""
+    return str(Decimal(str(x)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
 def table(rows, methods, cols, header):
@@ -70,9 +76,24 @@ def main():
     lines += ["", f"Hybrid is best in {w2[('src_cov', 'hybrid')]}/9 languages for source coverage "
               f"and {w2[('tgt_cov', 'hybrid')]}/9 for target coverage.", ""]
 
+    sim = [("simalign", "ent_cos"), ("awesome", "ent_cos"), ("hybrid", "hybrid_H")]
+    lines += ["## Table 3: similarity of the entity-word links", "",
+              "Mean similarity of the links on English entity words, each aligner with its own "
+              "similarity measure: mBERT cosine (layer 8) for SimAlign and AwesomeAlign, the hybrid "
+              "score H (semantic + phonetic + romanisation) for Hybrid. H includes the entity bonus "
+              "and is normalised per sentence, so the columns are not on the same scale and no "
+              "best value is marked. Rounded to two decimals (200 sampled pairs per language).", "",
+              "| Language | SimAlign (cos) | AwesomeAlign (cos) | Hybrid (H) |", "|---|---|---|---|"]
+    for code, name in LANGS:
+        lines.append(f"| {name} | " + " | ".join(r2(rows[(code, m)][c]) for m, c in sim) + " |")
+    lines.append("| Average | " + " | ".join(
+        r2(round(sum(float(rows[(code, m)][c]) for code, _ in LANGS) / len(LANGS), 3)) for m, c in sim) + " |")
+    lines += ["", "Measured by the same mBERT cosine for all three aligners (`ent_cos` in `scores.csv`), "
+              "AwesomeAlign is highest in every language; see README.md.", ""]
+
     m6 = ["simalign", "awesome", "hybrid"]
     t6, w6 = table(rows, m6, ["ent_cov"], "| Language | " + " | ".join(NAMES[m] for m in m6) + " |")
-    lines += ["## Table 6: entity-word coverage", "",
+    lines += ["## Table 7: entity-word coverage", "",
               "Fraction of English entity words (spaCy PER/LOC/ORG) with at least one alignment link.", ""]
     lines += t6
     lines += ["", f"Hybrid is best in {w6[('ent_cov', 'hybrid')]}/9 languages.", ""]

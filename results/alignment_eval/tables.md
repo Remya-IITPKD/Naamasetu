@@ -21,7 +21,26 @@ Fraction of English (source) and target words with at least one alignment link.
 
 Hybrid is best in 8/9 languages for source coverage and 9/9 for target coverage.
 
-## Table 6: entity-word coverage
+## Table 3: similarity of the entity-word links
+
+Mean similarity of the links on English entity words, each aligner with its own similarity measure: mBERT cosine (layer 8) for SimAlign and AwesomeAlign, the hybrid score H (semantic + phonetic + romanisation) for Hybrid. H includes the entity bonus and is normalised per sentence, so the columns are not on the same scale and no best value is marked. Rounded to two decimals (200 sampled pairs per language).
+
+| Language | SimAlign (cos) | AwesomeAlign (cos) | Hybrid (H) |
+|---|---|---|---|
+| Malayalam | 0.53 | 0.67 | 0.82 |
+| Tamil | 0.67 | 0.71 | 0.82 |
+| Telugu | 0.67 | 0.71 | 0.84 |
+| Kannada | 0.66 | 0.71 | 0.83 |
+| Marathi | 0.67 | 0.70 | 0.83 |
+| Gujarati | 0.61 | 0.66 | 0.80 |
+| Punjabi | 0.66 | 0.70 | 0.83 |
+| Assamese | 0.69 | 0.76 | 0.84 |
+| Odia | 0.69 | 0.74 | 0.78 |
+| Average | 0.65 | 0.71 | 0.82 |
+
+Measured by the same mBERT cosine for all three aligners (`ent_cos` in `scores.csv`), AwesomeAlign is highest in every language; see README.md.
+
+## Table 7: entity-word coverage
 
 Fraction of English entity words (spaCy PER/LOC/ORG) with at least one alignment link.
 

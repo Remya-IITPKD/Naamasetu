@@ -11,7 +11,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 | You want… | Look at |
 |---|---|
 | The paper's results tables | [`results/paper_tables.md`](results/paper_tables.md) (also below, under Results) |
-| The alignment tables (coverage, entity-word coverage; paper Tables 2 and 6) | [`results/alignment_eval/`](results/alignment_eval/README.md) |
+| The alignment tables (coverage, entity-word coverage; similarity of entity-word links; paper Tables 2, 3 and 7) | [`results/alignment_eval/`](results/alignment_eval/README.md) |
 | Every score for every model | [`results/test_scores.csv`](results/test_scores.csv) |
 | Hyperparameters of each reported model | [`results/selected_runs.tsv`](results/selected_runs.tsv), [`configs/hyperparameters.yaml`](configs/hyperparameters.yaml) |
 | The parallel sentence pairs and SimAlign / awesome-align outputs | `data/parallel/` (see [`data/README.md`](data/README.md)) |
@@ -67,7 +67,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 │   ├── 06_evaluate.py
 │   ├── 07_aggregate_results.py
 │   ├── 08_bootstrap_significance.py  (optional) paired test between two models
-│   └── analysis/            alignment evaluation (Tables 2 and 6), tag counts
+│   └── analysis/            alignment evaluation (Tables 2, 3, 7), tag counts
 ├── configs/hyperparameters.yaml   every value used for reported numbers
 ├── slurm/                   batch templates (projection, training)
 ├── run_pipeline.sh          end-to-end for one language

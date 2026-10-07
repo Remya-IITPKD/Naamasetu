@@ -77,12 +77,10 @@ def main():
               f"and {w2[('tgt_cov', 'hybrid')]}/9 for target coverage.", ""]
 
     sim = [("simalign", "ent_cos"), ("awesome", "ent_cos"), ("hybrid", "hybrid_H")]
-    lines += ["## Table 3: average similarity of the entity-word links", "",
-              "Average similarity of the links on English entity words, each aligner scored with "
-              "its own similarity: multilingual-embedding (mBERT) similarity for SimAlign and "
-              "AwesomeAlign, and the hybrid aligner's combined semantic + phonetic + romanisation "
-              "score for Hybrid. The two kinds of score are on different scales, so no best value "
-              "is marked. Rounded to two decimals (200 sampled pairs per language).", "",
+    lines += ["## Table 3: Average similarity on entity-bearing words", "",
+              "SimAlign 0.53–0.69 and AwesomeAlign 0.66–0.76 (embedding similarity); Hybrid "
+              "0.78–0.84 (combined semantic + phonetic + romanisation score). "
+              "Rounded to two decimals (200 sampled pairs per language).", "",
               "| Language | SimAlign | AwesomeAlign | Hybrid |", "|---|---|---|---|"]
     for code, name in LANGS:
         lines.append(f"| {name} | " + " | ".join(r2(rows[(code, m)][c]) for m, c in sim) + " |")

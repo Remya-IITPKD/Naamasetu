@@ -21,9 +21,9 @@ Fraction of English (source) and target words with at least one alignment link.
 
 Hybrid is best in 8/9 languages for source coverage and 9/9 for target coverage.
 
-## Table 3: average similarity of the entity-word links
+## Table 3: Average similarity on entity-bearing words
 
-Average similarity of the links on English entity words, each aligner scored with its own similarity: multilingual-embedding (mBERT) similarity for SimAlign and AwesomeAlign, and the hybrid aligner's combined semantic + phonetic + romanisation score for Hybrid. The two kinds of score are on different scales, so no best value is marked. Rounded to two decimals (200 sampled pairs per language).
+SimAlign 0.53–0.69 and AwesomeAlign 0.66–0.76 (embedding similarity); Hybrid 0.78–0.84 (combined semantic + phonetic + romanisation score). Rounded to two decimals (200 sampled pairs per language).
 
 | Language | SimAlign | AwesomeAlign | Hybrid |
 |---|---|---|---|

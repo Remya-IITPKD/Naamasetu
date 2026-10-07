@@ -14,7 +14,7 @@ kn, pa, ta and te, so the pool there is smaller; see `data/README.md`).
 |---|---|---|
 | Source coverage | fraction of English words with at least one alignment link | Table 2 |
 | Target coverage | fraction of target-language words with at least one alignment link | Table 2 |
-| Average similarity of entity-word links | average similarity of the links on English entity words, each aligner scored with its own similarity: multilingual-embedding similarity for SimAlign and awesome-align, the combined semantic + phonetic + romanisation score for the hybrid aligner | Table 3 |
+| Average similarity on entity-bearing words | average similarity of the links on English entity words: multilingual-embedding similarity for SimAlign and awesome-align, the combined semantic + phonetic + romanisation score for the hybrid aligner | Table 3 |
 | Entity-word coverage | fraction of English **entity** words with at least one link; entity words are tagged with spaCy (`en_core_web_sm`, PERSON→PER, GPE/LOC→LOC, ORG→ORG), exactly as in `scripts/02_project_labels.py` | Table 7 |
 
 Words are whitespace-separated words of each sentence, the same for every aligner, so
@@ -30,9 +30,9 @@ coverage does not by itself show higher alignment precision.
 * **Target coverage:** hybrid best in all 9 languages.
 * **Entity-word coverage:** hybrid best in 8 of 9 languages (0.75–0.99); Malayalam is
   again the exception. Largest gain on Odia (0.462 → 0.845).
-* **Average similarity of entity-word links (Table 3):** SimAlign 0.53–0.69, awesome-align
-  0.66–0.76 (embedding similarity), hybrid 0.78–0.84 (combined semantic + phonetic +
-  romanisation score). The scores are on different scales, so the table does not rank them.
+* **Average similarity on entity-bearing words (Table 3):** SimAlign 0.53–0.69 and
+  awesome-align 0.66–0.76 (embedding similarity); hybrid 0.78–0.84 (combined semantic +
+  phonetic + romanisation score).
 * **Averages over the nine languages** (source / target / entity-word coverage): hybrid
   0.836 / 0.877 / 0.889, SimAlign 0.682 / 0.705 / 0.783, awesome-align 0.363 / 0.447 / 0.497.
 

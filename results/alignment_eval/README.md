@@ -47,12 +47,9 @@ coverage does not by itself show higher alignment precision.
 | `ent_cos`, `span_cos`, `cos_PER/LOC/ORG` | mean cosine similarity of the links on entity words (or spans), computed for **every** aligner with the same encoder: mBERT (`bert-base-multilingual-cased`), layer 8, word vector = mean of its sub-word states, as in the hybrid aligner |
 | `hybrid_H` | mean of the hybrid score `H` stored in the hybrid files on entity-word links |
 
-On cosine, awesome-align is highest in every language (it links few, high-confidence
-pairs) and the hybrid aligner is somewhat lower: its extra links come from phonetic and
-romanised-spelling evidence, i.e. exactly the transliterated names whose meaning
-embeddings diverge. `hybrid_H` is **not** a cosine (it mixes semantic, phonetic and
-romanisation scores, adds the entity bonus λ and is normalised per sentence), so it is not
-comparable with the cosine columns.
+Table 3 uses `ent_cos` for SimAlign and awesome-align and `hybrid_H` for the hybrid
+aligner. `hybrid_H` combines semantic, phonetic and romanisation scores, adds the entity
+bonus λ and is normalised per sentence, so it is a different measure from the cosine columns.
 
 ## How the released files are read
 

@@ -34,8 +34,8 @@ All values are in `configs/hyperparameters.yaml`.
   Early stopping only decides when training ends; the checkpoint with the
   highest dev F1 is restored and evaluated. (The `best_epoch` in the training
   logs is the lowest-dev-loss epoch, which can differ.)
-* One training seed (42) per configuration; the LR sweeps already take about
-  575 GPU-hours.
+* One training seed (42) per configuration; the LR sweeps and the silver-only
+  runs take about 590 GPU-hours.
 * The LR selected for every run is listed in `results/selected_runs.tsv`.
 
 Projection weights (α=0.6, β=0.2, γ=0.2, λ=0.15, θ=0.8, τ=0.40, K=2) were
@@ -87,6 +87,7 @@ precision. Method, results and commands: [`results/alignment_eval/README.md`](..
 | 02 projection | 1× NVIDIA H100 or 4–8 CPU cores | minutes (as) to ~8 h (gu), from job logs | not recorded |
 | 05 fine-tuning, one run (1 LR) | 1× NVIDIA H100 80GB | 2 min (as) – 4.4 h (ml) | – |
 | 05 fine-tuning, all LR sweeps | 1× H100 per run | – | ≈ 575 |
+| 05 fine-tuning, silver-only runs (Appendix C) | 1× H100 per run | – | ≈ 12 |
 
 Fine-tuning time per run, averaged over the LR sweep (seconds):
 
@@ -96,9 +97,10 @@ Fine-tuning time per run, averaged over the LR sweep (seconds):
 | mBERT augmented | 144 | 8315 | 7236 | 12433 | 6461 | 2825 | 7672 | 8277 | 9921 |
 | XLM-R gold only | 167 | 8291 | 7982 | 15817 | 6871 | 3321 | 7605 | 8666 | 9750 |
 
-GPU-hour total ≈ 575 h: 6 runs × 9 languages for each augmented model (≈ 128 h
+GPU-hour total ≈ 590 h: 6 runs × 9 languages for each augmented model (≈ 128 h
 XLM-R, ≈ 105 h mBERT; these produce the reported tables) plus the 18-run
-gold-only XLM-R grid (≈ 340 h), which was run but is not reported. Evaluating all dev-selected models on test takes under an hour on CPU.
+gold-only XLM-R grid (≈ 340 h), which was run but is not reported, plus the
+silver-only models of Appendix C (2 models × 9 languages × 3 LRs, ≈ 12 h; `results/silver_only/`). Evaluating all dev-selected models on test takes under an hour on CPU.
 
 Software (training and evaluation): Python 3.10.19, PyTorch 2.10.0 (CUDA 12.8),
 Transformers 4.35.2, Datasets 2.14.6, NumPy 1.26.4.

@@ -2,6 +2,10 @@
 
 Every table in the paper appendix, regenerated from the released data and logs. CSVs in this folder are written by the scripts named below.
 
+## Paper Table 1: dataset comparison
+
+See [`dataset_comparison.md`](dataset_comparison.md) (sentences per language in existing Indic NER datasets, with the source of every number).
+
 ## A. Corpus statistics
 
 ### Parallel page and sentence pairs (`page_stats.csv`, `scripts/analysis/page_stats.py`)

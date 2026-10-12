@@ -1,0 +1,9 @@
+dataset,reference,construction,as,gu,kn,ml,mr,or,pa,ta,te,source_of_counts
+Naamapadam,Mhaske et al. (2023),automatic,10369,476310,475163,721244,458628,198780,466867,501435,511288,train+dev+test sentences of the released Naamapadam splits (as used in this work; data/naamapadam/)
+Naamasetu (ours),this work,automatic,1350,75005,105592,240153,82776,23010,128364,299637,360231,"all generated sentence pairs, context similarity >= 0.7 (data/parallel/); 767,727 carry at least one entity"
+CLASSER,Kaushik and Anand (2025),automatic,156842,,,,680892,,,,,"train+dev+test sentences, CLASSER paper Table 1 (as: 140,257+15,585+1,000; mr: 611,902+67,990+1,000)"
+WikiAnn,Pan et al. (2017),automatic,300,300,300,12000,7000,300,300,17000,3000,"train+validation+test rows of the Hugging Face unimelb-nlp/wikiann splits (Rahimi et al., 2019)"
+L3Cube-MahaNER,Litake et al. (2022),manual,,,,,25000,,,,,"21,500 train + 1,500 validation + 2,000 test sentences (paper Table 1)"
+AsNER,Pathak et al. (2022),manual,24040,,,,,,,,,"21,475 train + 767 dev + 1,798 test sentences (paper Table 2)"
+Bahad et al.,Bahad et al. (2024),manual,,,,,,15145,,,3761,"Odia 12,109+1,519+1,517; Telugu 2,993+384+384 sentences (paper Table 3)"
+L3Cube-MahaSocialNER,Chaudhari et al. (2024),manual,,,,,18000,,,,,"18,000 sentences (paper abstract)"

@@ -5,6 +5,35 @@ Metric: word-level micro-F1 over PER/ORG/LOC with B-/I- merged, `O` excluded
 Augmented = Naamapadam + Naamasetu silver data. Every model: seed 42, learning rate chosen
 on dev (`selected_runs.tsv`), tested once. Higher augmented F1 per language in bold.
 
+## Table 8: NER F1 (%), rounded to whole numbers
+
+Same values as Table 16 below, rounded half-up. Higher augmented F1 per language in bold;
+Telugu rounds to 87 for both encoders, and mBERT is bold because it is higher before
+rounding (87.04 vs 86.98).
+
+| Language | Baseline mBERT† | Naamasetu only mBERT | Augmented mBERT | Augmented XLM-R |
+|---|---|---|---|---|
+| Malayalam | 81 | 74 | 84 | **85** |
+| Assamese | 45 | 22 | 67 | **72** |
+| Marathi | 81 | 62 | **87** | 86 |
+| Odia | 25 | 9 | 30 | **55** |
+| Gujarati | 81 | 72 | 83 | **84** |
+| Kannada | 80 | 73 | 85 | **86** |
+| Punjabi | 72 | 68 | 81 | **82** |
+| Telugu | 82 | 73 | **87** | 87 |
+| Tamil | 73 | 64 | 78 | **79** |
+| Average | 69.1 | 57.4 | 75.9 | 79.5 |
+
+† Naamapadam mBERT, cited from Mhaske et al. (2023), not re-run.
+
+Statements in Section 5.3 that follow from these numbers:
+
+* Naamasetu-only mBERT reaches 83% of the Naamapadam baseline on average
+  (57.43 / 69.06 = 0.832).
+* Naamasetu is about 20% of Naamapadam's size: 767,727 entity-bearing sentences vs.
+  3,820,084 Naamapadam training sentences over the nine languages (Table 3),
+  767,727 / 3,820,084 = 0.201.
+
 ## Main results: NER F1 (%) (paper Table 16; Table 8 shows the same values rounded)
 
 | Language | Naamapadam mBERT (cited) | Naamasetu only mBERT | Naamasetu only XLM-R | Augmented mBERT | Augmented XLM-R | Relative F1 mBERT | Relative F1 XLM-R |

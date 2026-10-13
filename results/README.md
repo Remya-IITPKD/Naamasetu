@@ -6,7 +6,7 @@ nothing is hand-edited.
 
 | File | Contents | Produced by |
 |---|---|---|
-| `paper_tables.md` | the paper's main-results table (Table 16; Table 8 rounded) and per-entity table (Table 15), in the paper's layout and metric | built from `test_scores.csv` and `silver_only/` |
+| `paper_tables.md` | the paper's main-results tables (Table 8 and Table 16) and per-entity table (Table 15), in the paper's layout and metric | built from `test_scores.csv` and `silver_only/` |
 | `selected_runs.tsv` | batch size, LR and dev F1 of the model chosen for each model and language | training logs (selection on dev) |
 | `main_table.{md,tex}`, `summary.csv` | span-level test F1 × 100 | `07_aggregate_results.py` |
 | `main_table_token.{md,tex}`, `summary_token.csv` | the same for token-level (BIO) F1 | `07_aggregate_results.py --metric test_token_f1` |

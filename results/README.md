@@ -12,7 +12,7 @@ nothing is hand-edited.
 | `main_table_token.{md,tex}`, `summary_token.csv` | the same for token-level (BIO) F1 | `07_aggregate_results.py --metric test_token_f1` |
 | `main_table_type.{md,tex}`, `summary_type.csv` | the same for type-level F1 (B/I merged) | `07_aggregate_results.py --metric test_type_f1` |
 | `test_scores.csv` | every metric (span, token, type) with P/R/F1, plus per-type P/R/F1/support for span and type | `06_evaluate.py` |
-| `alignment_eval/` | alignment evaluation: source/target coverage and entity-word coverage of SimAlign, awesome-align and the hybrid aligner on 200 pairs per language (paper Tables 2 and 6); see its README | `scripts/analysis/build_alignment_sample.py`, `alignment_eval_scores.py`, `alignment_tables.py` |
+| `alignment_eval/` | alignment evaluation: source/target coverage and entity-word coverage of SimAlign, awesome-align and the hybrid aligner on 200 pairs per language (paper Tables 4, 5 and 7); see its README | `scripts/analysis/build_alignment_sample.py`, `alignment_eval_scores.py`, `alignment_tables.py` |
 
 Each configuration was trained once (seed 42), so `summary*.csv` has
 `n_seeds = 1` and `std = 0`.

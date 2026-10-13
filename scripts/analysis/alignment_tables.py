@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Write the paper's alignment tables (Table 2: word coverage; Table 3: average similarity of the
-entity-word links; Table 7: entity-word coverage) as Markdown from the scores.csv written by alignment_eval_scores.py.
+"""Write the paper's alignment tables (Table 4: word coverage; Table 7: average similarity of the
+entity-word links; Table 5: entity-word coverage) as Markdown from the scores.csv written by alignment_eval_scores.py.
 
 Usage:
     python scripts/analysis/alignment_tables.py --scores results/alignment_eval/scores.csv \
@@ -70,14 +70,14 @@ def main():
     m3 = ["awesome", "simalign", "hybrid"]
     t2, w2 = table(rows, m3, ["src_cov", "tgt_cov"],
                    "| Language | " + " | ".join(f"{NAMES[m]} Src | {NAMES[m]} Tgt" for m in m3) + " |")
-    lines += ["## Table 2: source / target word coverage", "",
+    lines += ["## Table 4: source / target word coverage", "",
               "Fraction of English (source) and target words with at least one alignment link.", ""]
     lines += t2
     lines += ["", f"Hybrid is best in {w2[('src_cov', 'hybrid')]}/9 languages for source coverage "
               f"and {w2[('tgt_cov', 'hybrid')]}/9 for target coverage.", ""]
 
     sim = [("simalign", "ent_cos"), ("awesome", "ent_cos"), ("hybrid", "hybrid_H")]
-    lines += ["## Table 3: Average similarity on entity-bearing words", "",
+    lines += ["## Table 7: Average similarity on entity-bearing words", "",
               "SimAlign 0.53–0.69 and AwesomeAlign 0.66–0.76 (embedding similarity); Hybrid "
               "0.78–0.84 (combined semantic + phonetic + romanisation score). "
               "Rounded to two decimals (200 sampled pairs per language).", "",
@@ -90,7 +90,7 @@ def main():
 
     m6 = ["simalign", "awesome", "hybrid"]
     t6, w6 = table(rows, m6, ["ent_cov"], "| Language | " + " | ".join(NAMES[m] for m in m6) + " |")
-    lines += ["## Table 7: entity-word coverage", "",
+    lines += ["## Table 5: entity-word coverage", "",
               "Fraction of English entity words (spaCy PER/LOC/ORG) with at least one alignment link.", ""]
     lines += t6
     lines += ["", f"Hybrid is best in {w6[('ent_cov', 'hybrid')]}/9 languages.", ""]

@@ -2,7 +2,7 @@
 # flags; this file documents the values in one place for reviewers.
 
 parallel_extraction:          # scripts/01_extract_parallel.py
-  sentence_encoder: paraphrase-multilingual-mpnet-base-v2
+  sentence_encoder: paraphrase-multilingual-MiniLM-L12-v2
   sim_threshold: 0.70
   matching: greedy 1-1
 

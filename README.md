@@ -28,7 +28,7 @@ Languages: Assamese (as), Gujarati (gu), Kannada (kn), Malayalam (ml), Marathi (
 
 ```
  Wikipedia title pairs
-        │  01_extract_parallel.py     MPNet sentence embeddings + greedy 1-1 matching
+        │  01_extract_parallel.py     MiniLM sentence embeddings + greedy 1-1 matching
         ▼
  EN–Indic parallel sentences
         │  02_project_labels.py       spaCy EN NER → hybrid alignment (Alg. 1) → BIO projection

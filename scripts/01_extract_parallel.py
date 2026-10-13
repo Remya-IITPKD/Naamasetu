@@ -5,7 +5,7 @@ Pipeline:
     CSV of (target title, English title) pairs
       -> fetch both Wikipedia pages -> strip non-prose markup
       -> sentence-split (indic-nlp for target, NLTK for English)
-      -> multilingual MPNet sentence embeddings -> cosine similarity
+      -> multilingual MiniLM sentence embeddings -> cosine similarity
       -> greedy 1-1 matching above a threshold
       -> per-page JSONL/CSV + merged JSONL/CSV
 
@@ -47,7 +47,7 @@ def parse_args():
     ap.add_argument("--lang", required=True, choices=ALL_LANGS)
     ap.add_argument("--csv", required=True, help="title/url pairs CSV")
     ap.add_argument("--out-dir", required=True, help="a <lang>/ subfolder is created")
-    ap.add_argument("--model", default="paraphrase-multilingual-mpnet-base-v2")
+    ap.add_argument("--model", default="paraphrase-multilingual-MiniLM-L12-v2")
     ap.add_argument("--sim-threshold", type=float, default=0.70)
     ap.add_argument("--embed-batch", type=int, default=64)
     ap.add_argument("--timeout", type=int, default=20)

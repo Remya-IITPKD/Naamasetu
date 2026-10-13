@@ -5,19 +5,24 @@ Metric: word-level micro-F1 over PER/ORG/LOC with B-/I- merged, `O` excluded
 Augmented = Naamapadam + Naamasetu silver data. Every model: seed 42, learning rate chosen
 on dev (`selected_runs.tsv`), tested once. Higher augmented F1 per language in bold.
 
-## Main results: NER F1 (%)
+## Main results: NER F1 (%) (paper Table 16; Table 8 shows the same values rounded)
 
-| Language | Naamapadam mBERT (cited) | Augmented mBERT | Augmented XLM-R |
-|---|---|---|---|
-| Malayalam | 81.49 | 83.71 | **84.94** |
-| Assamese | 45.37 | 67.47 | **72.09** |
-| Marathi | 81.37 | **86.61** | 86.26 |
-| Odia | 25.01 | 30.49 | **55.00** |
-| Gujarati | 80.59 | 83.24 | **84.08** |
-| Kannada | 80.33 | 85.26 | **85.53** |
-| Punjabi | 71.51 | 81.42 | **81.50** |
-| Telugu | 82.49 | **87.04** | 86.98 |
-| Tamil | 73.36 | 78.12 | **78.91** |
+| Language | Naamapadam mBERT (cited) | Naamasetu only mBERT | Naamasetu only XLM-R | Augmented mBERT | Augmented XLM-R | Relative F1 mBERT | Relative F1 XLM-R |
+|---|---|---|---|---|---|---|---|
+| Malayalam | 81.49 | 73.54 | 77.66 | 83.71 | 84.94 | 88 | 91 |
+| Assamese | 45.37 | 21.57 | 15.79 | 67.47 | 72.09 | 32 | 22 |
+| Marathi | 81.37 | 62.28 | 67.32 | 86.61 | 86.26 | 72 | 78 |
+| Odia | 25.01 | 9.12 | 16.18 | 30.49 | 55.00 | 30 | 29 |
+| Gujarati | 80.59 | 71.96 | 80.74 | 83.24 | 84.08 | 86 | 96 |
+| Kannada | 80.33 | 73.11 | 78.58 | 85.26 | 85.53 | 86 | 92 |
+| Punjabi | 71.51 | 68.29 | 71.40 | 81.42 | 81.50 | 84 | 88 |
+| Telugu | 82.49 | 72.79 | 78.28 | 87.04 | 86.98 | 84 | 90 |
+| Tamil | 73.36 | 64.20 | 68.07 | 78.12 | 78.91 | 82 | 86 |
+| Average | 69.06 | 57.43 | 61.56 | 75.93 | 79.48 | 76 | 77 |
+
+Naamasetu only = trained on the Naamasetu silver data alone (`silver_only/`, built with
+`scripts/09_silver_only_split.py`). Relative F1 = Naamasetu-only F1 / Augmented F1 × 100 for
+the same encoder; the Average row uses the average F1 values.
 
 Naamapadam mBERT: reported by Mhaske et al. (2023), Table 5 (monolingual mBERT), not re-run. Because this baseline is cited rather than retrained, the difference to our models reflects the whole system (training data, encoder and training setup), not the silver data alone.
 

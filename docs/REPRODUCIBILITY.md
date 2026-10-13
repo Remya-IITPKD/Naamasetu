@@ -9,7 +9,7 @@ This file collects what the ARR Responsible NLP Checklist asks about
 |---|---|---|
 | mBERT | `bert-base-multilingual-cased` | ~178M |
 | XLM-R base | `xlm-roberta-base` | ~278M |
-| Sentence encoder (Stage 1) | `paraphrase-multilingual-mpnet-base-v2` | ~278M |
+| Sentence encoder (Stage 1) | `paraphrase-multilingual-MiniLM-L12-v2` | ~118M |
 | English NER (Stage 2) | spaCy 3.x `en_core_web_sm` (exact version not recorded) | – |
 
 ## Parallel-sentence threshold
